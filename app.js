@@ -17,8 +17,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         user: null,
         selectedRole: "",
         currentView: "dashboard",
-        publicProduct: "all",
-
         stores: [],
         sales: [],
         plans: [],
@@ -321,8 +319,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             targets: state.targets.length
         });
 
-        renderPublicPlans();
-
         if (state.role) {
             syncOptions();
             renderDashboard();
@@ -354,380 +350,296 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         $("landing-screen")
             ?.classList.add("active");
-
-        renderPublicPlans();
     }
-
-function renderPublicPlans() {
-
-    const container =
-        $("public-plan-grid");
-
-    if (!container) {
-        return;
-    }
-
-    const rows =
-        state.plans.filter(plan => {
-            return (
-                state.publicProduct === "all" ||
-                plan.product ===
-                    state.publicProduct
-            );
-        });
-
-    container.innerHTML =
-        rows.map(plan => `
-            <article class="public-plan-card">
-
-                <span class="product-badge">
-                    ${esc(plan.product)}
-                </span>
-
-                <h3>
-                    ${esc(plan.price_plan)}
-                </h3>
-
-                <div class="public-plan-price">
-                    ${money(plan.price)}
-                </div>
-
-                <small>
-                    Harga paket aktif
-                </small>
-
-            </article>
-        `).join("");
-
-    $("public-plan-empty")
-        ?.classList.toggle(
-            "hidden",
-            rows.length > 0
-        );
-}
-
-document
-    .querySelectorAll(
-        "[data-public-product]"
-    )
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                state.publicProduct =
-                    button.dataset
-                        .publicProduct ||
-                    "all";
-
-                document
-                    .querySelectorAll(
-                        "[data-public-product]"
-                    )
-                    .forEach(item => {
-
-                        item.classList.toggle(
-                            "active",
-                            item === button
-                        );
-                    });
-
-                renderPublicPlans();
-            }
-        );
-    });
-
-document
-    .querySelectorAll(
-        "[data-jump-product]"
-    )
-    .forEach(link => {
-
-        link.addEventListener(
-            "click",
-            () => {
-
-                state.publicProduct =
-                    link.dataset
-                        .jumpProduct ||
-                    "all";
-
-                renderPublicPlans();
-            }
-        );
-    });
-
-// =========================================================
-// LOGIN SCREEN
-// =========================================================
-
-function openLogin(role) {
-
-    state.selectedRole = role;
-
-    $("landing-screen")
-        ?.classList.remove("active");
-
-    $("role-screen")
-        ?.classList.remove("active");
-
-    $("app-screen")
-        ?.classList.remove("active");
-
-    $("login-screen")
-        ?.classList.add("active");
-
-    $("login-form")
-        ?.reset();
-
-    setText(
-        "login-status",
-        ""
-    );
-
-    if ($("login-password")) {
-        $("login-password").type =
-            "password";
-    }
-
-    setText(
-        "toggle-password",
-        "Lihat"
-    );
-
-    setText(
-        "login-title",
-        `Login ${role}`
-    );
-
-    setText(
-        "login-role-chip",
-        `${role} Access`
-    );
-
-    setText(
-        "login-description",
-        role === "Admin"
-            ? "Masukkan akun Administrator."
-            : "Masukkan akun Sales."
-    );
-
-    if ($("login-avatar")) {
-        $("login-avatar").textContent =
-            role === "Admin"
-                ? "A"
-                : "S";
-    }
-}
-
-// LANDING BARU
-
-$("landing-login-admin")
-    ?.addEventListener(
-        "click",
-        () => openLogin("Admin")
-    );
-
-$("landing-login-sales")
-    ?.addEventListener(
-        "click",
-        () => openLogin("Sales")
-    );
-
-// ID VERSI LAMA
-
-$("public-login-admin")
-    ?.addEventListener(
-        "click",
-        () => openLogin("Admin")
-    );
-
-$("public-login-sales")
-    ?.addEventListener(
-        "click",
-        () => openLogin("Sales")
-    );
-
-$("choose-admin")
-    ?.addEventListener(
-        "click",
-        () => openLogin("Admin")
-    );
-
-$("choose-sales")
-    ?.addEventListener(
-        "click",
-        () => openLogin("Sales")
-    );
-
-// BACK
-
-$("back-to-landing")
-    ?.addEventListener(
-        "click",
-        showLanding
-    );
-
-$("back-to-dashboard")
-    ?.addEventListener(
-        "click",
-        showLanding
-    );
-
-$("back-to-role")
-    ?.addEventListener(
-        "click",
-        showLanding
-    );
-
-// PASSWORD
-
-$("toggle-password")
-    ?.addEventListener(
-        "click",
-        () => {
-
-            const input =
-                $("login-password");
-
-            if (!input) {
-                return;
-            }
-
-            const hidden =
-                input.type === "password";
-
-            input.type =
-                hidden
-                    ? "text"
-                    : "password";
-
-            setText(
-                "toggle-password",
-                hidden
-                    ? "Sembunyikan"
-                    : "Lihat"
-            );
-        }
-    );
-
-// =========================================================
-// LOGIN
-// =========================================================
-
-$("login-form")
-    ?.addEventListener(
-        "submit",
-        async event => {
-
-            event.preventDefault();
-
-            const username =
-                getValue(
-                    "login-username"
-                ).trim();
-
-            const password =
-                getValue(
-                    "login-password"
-                );
-
-            if (
-                !username ||
-                !password
-            ) {
-                setText(
-                    "login-status",
-                    "Username dan password wajib diisi."
-                );
-
-                return;
-            }
-
-            try {
-
-                setText(
-                    "login-status",
-                    "Memeriksa akun..."
-                );
-
-                const result =
-                    await api(
-                        "./api/login.php",
-                        {
-                            method: "POST",
-                            body: {
-                                username,
-                                password
-                            }
-                        }
-                    );
-
-                if (
-                    !result.user ||
-                    result.logged_in === false
-                ) {
-                    throw new Error(
-                        "Session login gagal dibuat."
-                    );
-                }
-
-                if (
-                    state.selectedRole &&
-                    result.user.role !==
-                        state.selectedRole
-                ) {
-
-                    try {
-                        await api(
-                            "./api/logout.php",
-                            {
-                                method: "POST",
-                                body: {}
-                            }
-                        );
-                    } catch (e) {
-                        console.warn(e);
-                    }
-
-                    throw new Error(
-                        `Akun ini merupakan akun ${result.user.role}.`
-                    );
-                }
-
-                state.user =
-                    result.user;
-
-                state.role =
-                    result.user.role;
-
-                state.selectedRole =
-                    result.user.role;
-
-                setText(
-                    "login-status",
-                    ""
-                );
-
-                await startApplication();
-
-            } catch (error) {
-
-                console.error(
-                    "LOGIN ERROR:",
-                    error
-                );
-
-                setText(
-                    "login-status",
-                    error.message
-                );
-            }
-        }
-    );
 
     // =========================================================
+    // LOGIN SCREEN
+    // =========================================================
+
+    function openLogin(role) {
+
+        state.selectedRole = role;
+
+        $("landing-screen")
+            ?.classList.remove("active");
+
+        $("role-screen")
+            ?.classList.remove("active");
+
+        $("app-screen")
+            ?.classList.remove("active");
+
+        $("login-screen")
+            ?.classList.add("active");
+
+        $("login-form")
+            ?.reset();
+
+        setText(
+            "login-status",
+            ""
+        );
+
+        if ($("login-password")) {
+            $("login-password").type =
+                "password";
+        }
+
+        setText(
+            "toggle-password",
+            "Lihat"
+        );
+
+        setText(
+            "login-title",
+            `Login ${role}`
+        );
+
+        setText(
+            "login-role-chip",
+            `${role} Access`
+        );
+
+        setText(
+            "login-description",
+            role === "Admin"
+                ? "Masukkan akun Administrator."
+                : "Masukkan akun Sales."
+        );
+
+        if ($("login-avatar")) {
+            $("login-avatar").textContent =
+                role === "Admin"
+                    ? "A"
+                    : "S";
+        }
+    }
+
+    // =========================================================
+    // LANDING LOGIN
+    // =========================================================
+
+    $("landing-login-admin")
+        ?.addEventListener(
+            "click",
+            () => openLogin("Admin")
+        );
+
+    $("landing-login-sales")
+        ?.addEventListener(
+            "click",
+            () => openLogin("Sales")
+        );
+
+    $("hero-login-admin")
+        ?.addEventListener(
+            "click",
+            () => openLogin("Admin")
+        );
+
+    $("hero-login-sales")
+        ?.addEventListener(
+            "click",
+            () => openLogin("Sales")
+        );
+
+    // ID VERSI LAMA
+
+    $("public-login-admin")
+        ?.addEventListener(
+            "click",
+            () => openLogin("Admin")
+        );
+
+    $("public-login-sales")
+        ?.addEventListener(
+            "click",
+            () => openLogin("Sales")
+        );
+
+    $("choose-admin")
+        ?.addEventListener(
+            "click",
+            () => openLogin("Admin")
+        );
+
+    $("choose-sales")
+        ?.addEventListener(
+            "click",
+            () => openLogin("Sales")
+        );
+
+    // =========================================================
+    // BACK
+    // =========================================================
+
+    $("back-to-landing")
+        ?.addEventListener(
+            "click",
+            showLanding
+        );
+
+    $("back-to-dashboard")
+        ?.addEventListener(
+            "click",
+            showLanding
+        );
+
+    $("back-to-role")
+        ?.addEventListener(
+            "click",
+            showLanding
+        );
+
+    // =========================================================
+    // PASSWORD
+    // =========================================================
+
+    $("toggle-password")
+        ?.addEventListener(
+            "click",
+            () => {
+
+                const input =
+                    $("login-password");
+
+                if (!input) {
+                    return;
+                }
+
+                const hidden =
+                    input.type === "password";
+
+                input.type =
+                    hidden
+                        ? "text"
+                        : "password";
+
+                setText(
+                    "toggle-password",
+                    hidden
+                        ? "Sembunyikan"
+                        : "Lihat"
+                );
+            }
+        );
+
+    // =========================================================
+    // LOGIN
+    // =========================================================
+
+    $("login-form")
+        ?.addEventListener(
+            "submit",
+            async event => {
+
+                event.preventDefault();
+
+                const username =
+                    getValue(
+                        "login-username"
+                    ).trim();
+
+                const password =
+                    getValue(
+                        "login-password"
+                    );
+
+                if (
+                    !username ||
+                    !password
+                ) {
+                    setText(
+                        "login-status",
+                        "Username dan password wajib diisi."
+                    );
+
+                    return;
+                }
+
+                try {
+
+                    setText(
+                        "login-status",
+                        "Memeriksa akun..."
+                    );
+
+                    const result =
+                        await api(
+                            "./api/login.php",
+                            {
+                                method: "POST",
+                                body: {
+                                    username,
+                                    password
+                                }
+                            }
+                        );
+
+                    if (
+                        !result.user ||
+                        result.logged_in === false
+                    ) {
+                        throw new Error(
+                            "Session login gagal dibuat."
+                        );
+                    }
+
+                    if (
+                        state.selectedRole &&
+                        result.user.role !==
+                            state.selectedRole
+                    ) {
+
+                        try {
+                            await api(
+                                "./api/logout.php",
+                                {
+                                    method: "POST",
+                                    body: {}
+                                }
+                            );
+                        } catch (e) {
+                            console.warn(e);
+                        }
+
+                        throw new Error(
+                            `Akun ini merupakan akun ${result.user.role}.`
+                        );
+                    }
+
+                    state.user =
+                        result.user;
+
+                    state.role =
+                        result.user.role;
+
+                    state.selectedRole =
+                        result.user.role;
+
+                    setText(
+                        "login-status",
+                        ""
+                    );
+
+                    await startApplication();
+
+                } catch (error) {
+
+                    console.error(
+                        "LOGIN ERROR:",
+                        error
+                    );
+
+                    setText(
+                        "login-status",
+                        error.message
+                    );
+                }
+            }
+        );
+
+// =========================================================
 // START INTERNAL APP
 // =========================================================
 
@@ -808,8 +720,6 @@ async function startApplication() {
 
     /*
     LOAD DATABASE SETELAH SESSION USER ADA.
-    Penting supaya bootstrap.php tahu
-    Admin atau Sales yang sedang login.
     */
 
     await loadData();
@@ -821,8 +731,11 @@ async function startApplication() {
         applySalesIdentity();
 
         if ($("filter-sales")) {
+
             $("filter-sales").value =
-                String(state.user.id);
+                String(
+                    state.user.id
+                );
 
             $("filter-sales").disabled =
                 true;
@@ -833,6 +746,7 @@ async function startApplication() {
         enableAdminTransaction();
 
         if ($("filter-sales")) {
+
             $("filter-sales").disabled =
                 false;
         }
@@ -840,6 +754,7 @@ async function startApplication() {
 
     showView("dashboard");
 }
+
 
 // =========================================================
 // LOGOUT
@@ -856,7 +771,10 @@ $("logout-button")
                 $("logout-button");
 
             if (button) {
-                button.disabled = true;
+
+                button.disabled =
+                    true;
+
                 button.textContent =
                     "Logout...";
             }
@@ -866,46 +784,40 @@ $("logout-button")
                 await api(
                     "./api/logout.php",
                     {
-                        method: "POST",
+                        method:
+                            "POST",
+
                         body: {}
                     }
                 );
 
-                // HAPUS STATE LOGIN
-
                 state.role = "";
-                state.user = null;
-                state.selectedRole = "";
+
+                state.user =
+                    null;
+
+                state.selectedRole =
+                    "";
+
                 state.currentView =
                     "dashboard";
 
-                state.transactions = [];
-                state.visitors = [];
-                state.targets = [];
-                state.dailyTargets = [];
-                state.salesRanking = [];
+                state.transactions =
+                    [];
 
-                /*
-                LANGSUNG LANDING.
-                Jangan menunggu bootstrap.
-                */
+                state.visitors =
+                    [];
+
+                state.targets =
+                    [];
+
+                state.dailyTargets =
+                    [];
+
+                state.salesRanking =
+                    [];
 
                 showLanding();
-
-                /*
-                Kalau data publik boleh
-                diakses tanpa login,
-                refresh Price Plan.
-                */
-
-                try {
-                    await loadData();
-                } catch (error) {
-                    console.warn(
-                        "PUBLIC DATA:",
-                        error
-                    );
-                }
 
                 toast(
                     "Logout berhasil."
@@ -926,6 +838,7 @@ $("logout-button")
             } finally {
 
                 if (button) {
+
                     button.disabled =
                         false;
 
@@ -936,6 +849,7 @@ $("logout-button")
         }
     );
 
+
 // =========================================================
 // NAVIGATION
 // =========================================================
@@ -943,47 +857,60 @@ $("logout-button")
 const pageInfo = {
 
     dashboard: {
+
         kicker:
             "Ringkasan performa",
+
         title:
             "Dashboard Penjualan"
     },
 
     input: {
+
         kicker:
             "Pencatatan transaksi",
+
         title:
             "Input Penjualan"
     },
 
     recap: {
+
         kicker:
             "Data transaksi",
+
         title:
             "Recap Penjualan"
     },
 
     target: {
+
         kicker:
             "Kinerja Sales",
+
         title:
             "Target & Achievement"
     },
 
     visitor: {
+
         kicker:
             "Traffic Store",
+
         title:
             "Input Visitor"
     },
 
     master: {
+
         kicker:
             "Administration",
+
         title:
             "Master Data"
     }
 };
+
 
 function showView(view) {
 
@@ -995,39 +922,53 @@ function showView(view) {
             "master"
         ].includes(view)
     ) {
-        view = "dashboard";
+
+        view =
+            "dashboard";
     }
 
-    state.currentView = view;
+    state.currentView =
+        view;
 
     document
-        .querySelectorAll(".view")
-        .forEach(element => {
+        .querySelectorAll(
+            ".view"
+        )
+        .forEach(
+            element => {
 
-            element.classList.toggle(
-                "active",
-                element.id ===
-                    `view-${view}`
-            );
-        });
+                element.classList.toggle(
+                    "active",
+
+                    element.id ===
+                        `view-${view}`
+                );
+            }
+        );
 
     document
         .querySelectorAll(
             "[data-view]"
         )
-        .forEach(button => {
+        .forEach(
+            button => {
 
-            button.classList.toggle(
-                "active",
-                button.dataset.view ===
-                    view
-            );
-        });
+                button.classList.toggle(
+                    "active",
+
+                    button.dataset.view ===
+                        view
+                );
+            }
+        );
 
     const info =
-        pageInfo[view];
+        pageInfo[
+            view
+        ];
 
     if (info) {
+
         setText(
             "page-kicker",
             info.kicker
@@ -1039,55 +980,87 @@ function showView(view) {
         );
     }
 
-    if (view === "dashboard") {
+    if (
+        view ===
+        "dashboard"
+    ) {
+
         renderDashboard();
     }
 
-    if (view === "input") {
+    if (
+        view ===
+        "input"
+    ) {
+
         syncOptions();
 
         if (
-            state.role === "Sales"
+            state.role ===
+            "Sales"
         ) {
+
             applySalesIdentity();
+
         } else {
+
             enableAdminTransaction();
         }
     }
 
-    if (view === "recap") {
+    if (
+        view ===
+        "recap"
+    ) {
+
         renderRecap();
     }
 
-    if (view === "target") {
+    if (
+        view ===
+        "target"
+    ) {
+
         renderTargets();
     }
 
-    if (view === "visitor") {
+    if (
+        view ===
+        "visitor"
+    ) {
+
         renderVisitor();
     }
 
-    if (view === "master") {
+    if (
+        view ===
+        "master"
+    ) {
+
         renderMaster();
     }
 }
+
 
 document
     .querySelectorAll(
         "[data-view]"
     )
-    .forEach(button => {
+    .forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                showView(
-                    button.dataset.view
-                );
-            }
-        );
-    });
+                    showView(
+                        button.dataset.view
+                    );
+                }
+            );
+        }
+    );
+
 
 // =========================================================
 // SYNC SELECT
@@ -1096,8 +1069,10 @@ document
 function syncOptions() {
 
     if (
-        state.role !== "Sales"
+        state.role !==
+        "Sales"
     ) {
+
         fillSelect(
             "transaction-sales",
             state.sales,
@@ -1132,14 +1107,6 @@ function syncOptions() {
     );
 
     fillSelect(
-        "target-sales",
-        state.sales,
-        "Pilih Sales",
-        item => item.id,
-        item => item.full_name
-    );
-
-    fillSelect(
         "sales-store",
         state.stores,
         "Pilih Store",
@@ -1147,8 +1114,11 @@ function syncOptions() {
         item => item.store_name
     );
 
-    syncPlans(true);
+    syncPlans(
+        true
+    );
 }
+
 
 // =========================================================
 // STORE OPTIONS
@@ -1162,6 +1132,7 @@ function setStoreOptions(
         $("transaction-store");
 
     if (!select) {
+
         return;
     }
 
@@ -1171,33 +1142,42 @@ function setStoreOptions(
         </option>
     `;
 
-    state.stores.forEach(store => {
+    state.stores
+        .forEach(
+            store => {
 
-        const option =
-            document.createElement(
-                "option"
-            );
+                const option =
+                    document.createElement(
+                        "option"
+                    );
 
-        option.value =
-            String(store.id);
+                option.value =
+                    String(
+                        store.id
+                    );
 
-        option.textContent =
-            store.store_name;
+                option.textContent =
+                    store.store_name;
 
-        select.appendChild(
-            option
+                select.appendChild(
+                    option
+                );
+            }
         );
-    });
 
     if (
         selectedId !== "" &&
         selectedId !== null &&
         selectedId !== undefined
     ) {
+
         select.value =
-            String(selectedId);
+            String(
+                selectedId
+            );
     }
 }
+
 
 // =========================================================
 // PRICE PLAN
@@ -1220,6 +1200,7 @@ function syncPlans(
         !productSelect ||
         !planSelect
     ) {
+
         return;
     }
 
@@ -1233,27 +1214,29 @@ function syncPlans(
 
     /*
     Product belum dipilih:
-    semua Price Plan tampil.
+    semua Price Plan internal tetap tampil.
     */
 
     let plans =
-        [...state.plans];
-
-    /*
-    Product dipilih:
-    filter Price Plan.
-    */
+        [
+            ...state.plans
+        ];
 
     if (product) {
+
         plans =
             state.plans.filter(
                 plan =>
                     String(
-                        plan.product || ""
+                        plan.product ||
+                        ""
                     )
                         .trim()
-                        .toLowerCase() ===
-                    String(product)
+                        .toLowerCase()
+                    ===
+                    String(
+                        product
+                    )
                         .trim()
                         .toLowerCase()
             );
@@ -1265,43 +1248,56 @@ function syncPlans(
         </option>
     `;
 
-    plans.forEach(plan => {
+    plans.forEach(
+        plan => {
 
-        const option =
-            document.createElement(
-                "option"
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                String(
+                    plan.id
+                );
+
+            option.textContent =
+                `${plan.price_plan} — ${money(
+                    plan.price
+                )}`;
+
+            option.dataset.price =
+                String(
+                    plan.price
+                );
+
+            option.dataset.product =
+                String(
+                    plan.product
+                );
+
+            option.dataset.planName =
+                String(
+                    plan.price_plan
+                );
+
+            planSelect.appendChild(
+                option
             );
-
-        option.value =
-            String(plan.id);
-
-        option.textContent =
-            `${plan.price_plan} — ${money(
-                plan.price
-            )}`;
-
-        option.dataset.price =
-            String(plan.price);
-
-        option.dataset.product =
-            String(plan.product);
-
-        option.dataset.planName =
-            String(plan.price_plan);
-
-        planSelect.appendChild(
-            option
-        );
-    });
+        }
+    );
 
     if (
         previous &&
-        [...planSelect.options].some(
+        [
+            ...planSelect.options
+        ].some(
             option =>
                 option.value ===
                 previous
         )
     ) {
+
         planSelect.value =
             previous;
     }
@@ -1310,7 +1306,9 @@ function syncPlans(
         !keepSelected &&
         priceInput
     ) {
-        priceInput.value = "";
+
+        priceInput.value =
+            "";
     }
 
     calculateTotal();
@@ -1818,9 +1816,8 @@ $("transaction-form")
         }
     );
 
-// =========================================================
+    // =========================================================
 // TARGET DAILY READER
-// TIDAK ADA FORM MANUAL DI DASHBOARD
 // =========================================================
 
 function getDailyTarget(
@@ -1870,6 +1867,7 @@ function getDailyTarget(
         : 0;
 }
 
+
 // =========================================================
 // DAILY ACTUAL FROM TRANSACTIONS
 // =========================================================
@@ -1899,6 +1897,7 @@ function getDailyActual(
         );
 }
 
+
 // =========================================================
 // TARGET + ACTUAL + GAP + CARRY OVER
 // =========================================================
@@ -1926,7 +1925,7 @@ function calculateDailyPerformance(
 
     /*
     Kalau target harian belum ada,
-    masih tampilkan actual transaksi.
+    actual transaksi tetap bisa tampil.
     */
 
     if (!firstDate) {
@@ -2046,6 +2045,7 @@ function calculateDailyPerformance(
     });
 }
 
+
 // =========================================================
 // DASHBOARD
 // =========================================================
@@ -2073,25 +2073,33 @@ function renderDashboard() {
 
     setText(
         "metric-prioritas",
-        totalQuantity(prioritas)
+        totalQuantity(
+            prioritas
+        )
     );
 
     setText(
         "metric-home",
-        totalQuantity(home)
+        totalQuantity(
+            home
+        )
     );
 
     setText(
         "metric-revenue-prioritas",
         money(
-            totalRevenue(prioritas)
+            totalRevenue(
+                prioritas
+            )
         )
     );
 
     setText(
         "metric-revenue-home",
         money(
-            totalRevenue(home)
+            totalRevenue(
+                home
+            )
         )
     );
 
@@ -2101,7 +2109,8 @@ function renderDashboard() {
     );
 
     if (
-        state.role === "Admin"
+        state.role ===
+        "Admin"
     ) {
 
         const visitors =
@@ -2125,8 +2134,10 @@ function renderDashboard() {
     }
 
     if (
-        state.role === "Sales"
+        state.role ===
+        "Sales"
     ) {
+
         renderSalesDashboard();
     }
 }
@@ -2166,7 +2177,7 @@ function renderAdminDashboard() {
 
 
 // =========================================================
-// PRODUCT CHART
+// CANVAS HELPER
 // =========================================================
 
 function firstCanvas(ids) {
@@ -2176,15 +2187,17 @@ function firstCanvas(ids) {
     ) {
 
         if ($(id)) {
-
             return $(id);
-
         }
     }
 
     return null;
 }
 
+
+// =========================================================
+// PRODUCT CHART
+// =========================================================
 
 function renderProductChart(
     product,
@@ -2197,17 +2210,17 @@ function renderProductChart(
             product
         );
 
-
     const current =
         rows.find(
             row =>
-                row.date === today
-        ) ||
-
+                row.date ===
+                today
+        )
+        ||
         rows[
             rows.length - 1
-        ] ||
-
+        ]
+        ||
         {
             baseTarget: 0,
             carryIn: 0,
@@ -2219,7 +2232,7 @@ function renderProductChart(
 
 
     // =====================================================
-    // ID DASHBOARD BARU
+    // DASHBOARD IDS
     // =====================================================
 
     setText(
@@ -2227,30 +2240,25 @@ function renderProductChart(
         current.baseTarget
     );
 
-
     setText(
         `${prefix}-carry`,
         current.carryIn
     );
-
 
     setText(
         `${prefix}-effective-target`,
         current.effectiveTarget
     );
 
-
     setText(
         `${prefix}-today-actual`,
         current.actual
     );
 
-
     setText(
         `${prefix}-today-gap`,
         current.gap
     );
-
 
     setText(
         `${prefix}-achievement`,
@@ -2261,7 +2269,7 @@ function renderProductChart(
 
 
     // =====================================================
-    // SUPPORT ID DASHBOARD LAMA
+    // SUPPORT ID LAMA
     // =====================================================
 
     if (
@@ -2274,18 +2282,15 @@ function renderProductChart(
             current.effectiveTarget
         );
 
-
         setText(
             "prioritas-actual",
             current.actual
         );
 
-
         setText(
             "prioritas-gap",
             current.gap
         );
-
 
         setText(
             "prioritas-achievement",
@@ -2293,7 +2298,6 @@ function renderProductChart(
                 current.achievement
             )}%`
         );
-
     }
 
 
@@ -2307,18 +2311,15 @@ function renderProductChart(
             current.effectiveTarget
         );
 
-
         setText(
             "home-actual",
             current.actual
         );
 
-
         setText(
             "home-gap",
             current.gap
         );
-
 
         setText(
             "home-achievement",
@@ -2327,24 +2328,20 @@ function renderProductChart(
             )}%`
         );
 
-
         setText(
             "xlhome-target",
             current.effectiveTarget
         );
-
 
         setText(
             "xlhome-actual",
             current.actual
         );
 
-
         setText(
             "xlhome-gap",
             current.gap
         );
-
 
         setText(
             "xlhome-achievement",
@@ -2352,19 +2349,17 @@ function renderProductChart(
                 current.achievement
             )}%`
         );
-
     }
 
 
     // =====================================================
-    // STATUS TARGET HARI INI
+    // STATUS
     // =====================================================
 
     const status =
         $(
             `${prefix}-today-status`
         );
-
 
     if (status) {
 
@@ -2375,10 +2370,8 @@ function renderProductChart(
             status.textContent =
                 "Belum ada target";
 
-
             status.className =
                 "performance-status";
-
 
         } else if (
             current.gap === 0
@@ -2387,27 +2380,22 @@ function renderProductChart(
             status.textContent =
                 "Target Tercapai";
 
-
             status.className =
                 "performance-status success";
-
 
         } else {
 
             status.textContent =
                 `${current.gap} unit lagi`;
 
-
             status.className =
                 "performance-status pending";
-
         }
-
     }
 
 
     // =====================================================
-    // CHART.JS CHECK
+    // CHECK CHART.JS
     // =====================================================
 
     if (
@@ -2416,20 +2404,15 @@ function renderProductChart(
     ) {
 
         return;
-
     }
-
 
     const canvas =
         firstCanvas(
             canvasIds
         );
 
-
     if (!canvas) {
-
         return;
-
     }
 
 
@@ -2445,9 +2428,7 @@ function renderProductChart(
 
         adminPrioritasChart
             .destroy();
-
     }
-
 
     if (
         product ===
@@ -2457,29 +2438,23 @@ function renderProductChart(
 
         adminHomeChart
             .destroy();
-
     }
 
 
     // =====================================================
-    // CHART COLOR
+    // COLORS
     // =====================================================
 
     const primary =
         product ===
         "XL Prioritas"
-
             ? "#0d72d9"
-
             : "#07936a";
-
 
     const fill =
         product ===
         "XL Prioritas"
-
             ? "rgba(13,114,217,.12)"
-
             : "rgba(7,147,106,.12)";
 
 
@@ -2495,7 +2470,6 @@ function renderProductChart(
                 type:
                     "line",
 
-
                 data: {
 
                     labels:
@@ -2506,14 +2480,11 @@ function renderProductChart(
                                 )
                         ),
 
-
                     datasets: [
 
                         {
-
                             label:
                                 "Target",
-
 
                             data:
                                 rows.map(
@@ -2521,40 +2492,30 @@ function renderProductChart(
                                         row.effectiveTarget
                                 ),
 
-
                             borderColor:
                                 "#8a99a8",
-
 
                             backgroundColor:
                                 "transparent",
 
-
                             borderWidth:
                                 2,
-
 
                             borderDash: [
                                 6,
                                 5
                             ],
 
-
                             pointRadius:
                                 2,
 
-
                             tension:
                                 .3
-
                         },
 
-
                         {
-
                             label:
                                 "Actual",
-
 
                             data:
                                 rows.map(
@@ -2562,38 +2523,28 @@ function renderProductChart(
                                         row.actual
                                 ),
 
-
                             borderColor:
                                 primary,
-
 
                             backgroundColor:
                                 fill,
 
-
                             borderWidth:
                                 3,
-
 
                             pointRadius:
                                 4,
 
-
                             tension:
                                 .35,
 
-
                             fill:
                                 true
-
                         },
 
-
                         {
-
                             label:
                                 "Gap",
-
 
                             data:
                                 rows.map(
@@ -2601,42 +2552,32 @@ function renderProductChart(
                                         row.gap
                                 ),
 
-
                             borderColor:
                                 "#ed8b00",
-
 
                             backgroundColor:
                                 "transparent",
 
-
                             borderWidth:
                                 2,
-
 
                             pointRadius:
                                 3,
 
-
                             tension:
                                 .3
-
                         }
 
                     ]
-
                 },
-
 
                 options: {
 
                     responsive:
                         true,
 
-
                     maintainAspectRatio:
                         false,
-
 
                     interaction: {
 
@@ -2645,9 +2586,7 @@ function renderProductChart(
 
                         intersect:
                             false
-
                     },
-
 
                     plugins: {
 
@@ -2656,32 +2595,22 @@ function renderProductChart(
                             position:
                                 "bottom",
 
-
                             labels: {
 
                                 usePointStyle:
                                     true,
 
-
                                 boxWidth:
                                     7,
-
 
                                 padding:
                                     12,
 
-
                                 font: {
-
-                                    size:
-                                        9
-
+                                    size: 9
                                 }
-
                             }
-
                         },
-
 
                         tooltip: {
 
@@ -2694,19 +2623,15 @@ function renderProductChart(
                                             context[0]
                                                 .dataIndex;
 
-
                                         const row =
                                             rows[
                                                 index
                                             ];
 
-
                                         if (!row) {
 
                                             return [];
-
                                         }
-
 
                                         return [
 
@@ -2717,51 +2642,34 @@ function renderProductChart(
                                             `Achievement: ${Math.round(
                                                 row.achievement
                                             )}%`
-
                                         ];
-
                                     }
-
                             }
-
                         }
-
                     },
-
 
                     scales: {
 
                         x: {
 
                             grid: {
-
                                 display:
                                     false
-
                             }
-
                         },
-
 
                         y: {
 
                             beginAtZero:
                                 true,
 
-
                             ticks: {
-
                                 precision:
                                     0
-
                             }
-
                         }
-
                     }
-
                 }
-
             }
         );
 
@@ -2778,14 +2686,12 @@ function renderProductChart(
 
         adminHomeChart =
             chart;
-
     }
-
 }
 
 
 // =========================================================
-// DAILY TARGET ADMIN
+// ACTIVE DAILY TARGET
 // =========================================================
 
 function getActiveDailyTarget(
@@ -2797,10 +2703,8 @@ function getActiveDailyTarget(
             .filter(
                 item =>
                     item.product ===
-                    product
-
+                        product
                     &&
-
                     String(
                         item.target_date
                     ) <= today
@@ -2809,21 +2713,18 @@ function getActiveDailyTarget(
                 (a, b) =>
                     String(
                         b.target_date
-                    )
-                        .localeCompare(
-                            String(
-                                a.target_date
-                            )
+                    ).localeCompare(
+                        String(
+                            a.target_date
                         )
+                    )
             );
-
 
     return rows[0]
         ? Number(
             rows[0].daily_target
         ) || 0
         : 0;
-
 }
 
 
@@ -2838,35 +2739,27 @@ function renderDailyTargets() {
             "XL Prioritas"
         );
 
-
     const home =
         getActiveDailyTarget(
             "XLHome"
         );
-
 
     setText(
         "active-target-prioritas",
         prioritas
     );
 
-
     setText(
         "active-target-home",
         home
     );
 
-
     const container =
         $("daily-target-history");
 
-
     if (!container) {
-
         return;
-
     }
-
 
     const rows =
         [
@@ -2876,14 +2769,12 @@ function renderDailyTargets() {
                 (a, b) =>
                     String(
                         b.target_date
-                    )
-                        .localeCompare(
-                            String(
-                                a.target_date
-                            )
+                    ).localeCompare(
+                        String(
+                            a.target_date
                         )
+                    )
             );
-
 
     if (
         !rows.length
@@ -2895,11 +2786,8 @@ function renderDailyTargets() {
             </p>
         `;
 
-
         return;
-
     }
-
 
     container.innerHTML =
         rows.map(
@@ -2923,7 +2811,6 @@ function renderDailyTargets() {
 
                     </div>
 
-
                     <strong>
                         ${
                             Number(
@@ -2937,7 +2824,6 @@ function renderDailyTargets() {
 
             `
         ).join("");
-
 }
 
 
@@ -2952,18 +2838,15 @@ $("daily-target-form")
 
             event.preventDefault();
 
-
             const targetDate =
                 getValue(
                     "daily-target-date"
                 );
 
-
             const product =
                 getValue(
                     "daily-target-product"
                 );
-
 
             const dailyTarget =
                 Number(
@@ -2971,7 +2854,6 @@ $("daily-target-form")
                         "daily-target-value"
                     )
                 );
-
 
             if (
                 !targetDate ||
@@ -2983,11 +2865,8 @@ $("daily-target-form")
                     "Lengkapi data target harian."
                 );
 
-
                 return;
-
             }
-
 
             try {
 
@@ -2998,65 +2877,44 @@ $("daily-target-form")
                         method:
                             "POST",
 
-
                         body: {
 
                             target_date:
                                 targetDate,
 
-
                             product:
                                 product,
 
-
                             daily_target:
                                 dailyTarget
-
                         }
-
                     }
                 );
 
-
-                // RELOAD DATABASE
-
                 await loadData();
-
-
-                // RESET FORM
 
                 setValue(
                     "daily-target-product",
                     ""
                 );
 
-
                 setValue(
                     "daily-target-value",
                     ""
                 );
-
 
                 setValue(
                     "daily-target-date",
                     today
                 );
 
-
-                // REFRESH TARGET PAGE
-
                 renderDailyTargets();
 
-
-                // REFRESH DASHBOARD
-
                 renderDashboard();
-
 
                 toast(
                     "Target harian berhasil disimpan."
                 );
-
 
             } catch (error) {
 
@@ -3065,18 +2923,14 @@ $("daily-target-form")
                     error
                 );
 
-
                 toast(
                     error.message
                 );
-
             }
-
         }
     );
 
-
-// =========================================================
+    // =========================================================
 // VISITOR VS TRANSACTION
 // =========================================================
 
@@ -3085,104 +2939,81 @@ function renderVisitorTransactionChart() {
     const canvas =
         $("visitor-transaction-chart");
 
-
     if (
         !canvas ||
-        typeof Chart ===
-            "undefined"
+        typeof Chart === "undefined"
     ) {
-
         return;
-
     }
-
 
     const rows =
         state.stores
-            .map(
-                store => {
+            .map(store => {
 
-                    const id =
-                        Number(
-                            store.id
+                const id =
+                    Number(
+                        store.id
+                    );
+
+                const visitor =
+                    state.visitors
+                        .filter(
+                            item =>
+                                Number(
+                                    item.store_id
+                                ) === id
+                        )
+                        .reduce(
+                            (sum, item) =>
+                                sum +
+                                (
+                                    Number(
+                                        item.visitor_count
+                                    ) || 0
+                                ),
+                            0
                         );
 
-
-                    const visitor =
-                        state.visitors
-                            .filter(
-                                item =>
-                                    Number(
-                                        item.store_id
-                                    ) === id
-                            )
-                            .reduce(
+                const transaction =
+                    state.transactions
+                        .filter(
+                            item =>
+                                Number(
+                                    item.store_id
+                                ) === id
+                        )
+                        .reduce(
+                            (sum, item) =>
+                                sum +
                                 (
-                                    sum,
-                                    item
-                                ) =>
-                                    sum +
-                                    (
-                                        Number(
-                                            item.visitor_count
-                                        ) || 0
-                                    ),
-                                0
-                            );
-
-
-                    const transaction =
-                        state.transactions
-                            .filter(
-                                item =>
                                     Number(
-                                        item.store_id
-                                    ) === id
-                            )
-                            .reduce(
-                                (
-                                    sum,
-                                    item
-                                ) =>
-                                    sum +
-                                    (
-                                        Number(
-                                            item.quantity
-                                        ) || 0
-                                    ),
-                                0
-                            );
+                                        item.quantity
+                                    ) || 0
+                                ),
+                            0
+                        );
 
+                return {
 
-                    return {
+                    name:
+                        store.store_name,
 
-                        name:
-                            store.store_name,
+                    visitor,
 
-                        visitor,
-
-                        transaction
-
-                    };
-
-                }
-            )
+                    transaction
+                };
+            })
             .filter(
                 row =>
                     row.visitor > 0 ||
                     row.transaction > 0
             );
 
-
     if (
         visitorTransactionChart
     ) {
-
-        visitorTransactionChart
-            .destroy();
-
+        visitorTransactionChart.destroy();
     }
-
 
     visitorTransactionChart =
         new Chart(
@@ -3192,23 +3023,18 @@ function renderVisitorTransactionChart() {
                 type:
                     "bar",
 
-
                 data: {
 
                     labels:
                         rows.map(
-                            row =>
-                                row.name
+                            row => row.name
                         ),
-
 
                     datasets: [
 
                         {
-
                             label:
                                 "Visitor",
-
 
                             data:
                                 rows.map(
@@ -3216,22 +3042,16 @@ function renderVisitorTransactionChart() {
                                         row.visitor
                                 ),
 
-
                             backgroundColor:
                                 "#ed8b00",
 
-
                             borderRadius:
                                 7
-
                         },
 
-
                         {
-
                             label:
                                 "Transaksi",
-
 
                             data:
                                 rows.map(
@@ -3239,46 +3059,34 @@ function renderVisitorTransactionChart() {
                                         row.transaction
                                 ),
 
-
                             backgroundColor:
                                 "#0d72d9",
 
-
                             borderRadius:
                                 7
-
                         }
 
                     ]
-
                 },
-
 
                 options: {
 
                     indexAxis:
                         "y",
 
-
                     responsive:
                         true,
-
 
                     maintainAspectRatio:
                         false,
 
-
                     plugins: {
 
                         legend: {
-
                             position:
                                 "bottom"
-
                         }
-
                     },
-
 
                     scales: {
 
@@ -3287,35 +3095,23 @@ function renderVisitorTransactionChart() {
                             beginAtZero:
                                 true,
 
-
                             ticks: {
-
                                 precision:
                                     0
-
                             }
-
                         },
-
 
                         y: {
 
                             grid: {
-
                                 display:
                                     false
-
                             }
-
                         }
-
                     }
-
                 }
-
             }
         );
-
 }
 
 
@@ -3343,7 +3139,6 @@ function renderChannelBreakdown() {
                 0
             );
 
-
     const outstore =
         state.transactions
             .filter(
@@ -3362,7 +3157,6 @@ function renderChannelBreakdown() {
                 0
             );
 
-
     const max =
         Math.max(
             instore,
@@ -3370,18 +3164,15 @@ function renderChannelBreakdown() {
             1
         );
 
-
     setText(
         "admin-instore-total",
         `${instore} unit`
     );
 
-
     setText(
         "admin-outstore-total",
         `${outstore} unit`
     );
-
 
     if (
         $("admin-instore-bar")
@@ -3394,9 +3185,7 @@ function renderChannelBreakdown() {
                     max *
                     100
                 }%`;
-
     }
-
 
     if (
         $("admin-outstore-bar")
@@ -3409,9 +3198,7 @@ function renderChannelBreakdown() {
                     max *
                     100
                 }%`;
-
     }
-
 }
 
 
@@ -3424,7 +3211,6 @@ function getTopSales(
 ) {
 
     const map = {};
-
 
     state.transactions
         .filter(
@@ -3440,7 +3226,6 @@ function getTopSales(
                         row.sales_id
                     );
 
-
                 if (!map[id]) {
 
                     map[id] = {
@@ -3448,24 +3233,18 @@ function getTopSales(
                         sales_name:
                             row.sales_name,
 
-
                         quantity:
                             0,
 
-
                         revenue:
                             0
-
                     };
-
                 }
-
 
                 map[id].quantity +=
                     Number(
                         row.quantity
                     ) || 0;
-
 
                 map[id].revenue +=
                     (
@@ -3479,10 +3258,8 @@ function getTopSales(
                             row.quantity
                         ) || 0
                     );
-
             }
         );
-
 
     return Object
         .values(map)
@@ -3495,7 +3272,6 @@ function getTopSales(
             0,
             5
         );
-
 }
 
 
@@ -3506,12 +3282,10 @@ function renderTopSales() {
         "top-sales-prioritas"
     );
 
-
     renderTopSalesList(
         "XLHome",
         "top-sales-home"
     );
-
 }
 
 
@@ -3523,23 +3297,16 @@ function renderTopSalesList(
     const container =
         $(id);
 
-
     if (!container) {
-
         return;
-
     }
-
 
     const rows =
         getTopSales(
             product
         );
 
-
-    if (
-        !rows.length
-    ) {
+    if (!rows.length) {
 
         container.innerHTML = `
             <p class="empty-message">
@@ -3547,11 +3314,8 @@ function renderTopSalesList(
             </p>
         `;
 
-
         return;
-
     }
-
 
     container.innerHTML =
         rows.map(
@@ -3576,7 +3340,6 @@ function renderTopSalesList(
                         ${index + 1}
                     </span>
 
-
                     <div class="top-sales-name">
 
                         <strong>
@@ -3591,11 +3354,9 @@ function renderTopSalesList(
 
                     </div>
 
-
                     <span class="top-sales-qty">
                         ${row.quantity} Qty
                     </span>
-
 
                     <span class="top-sales-revenue">
                         ${money(
@@ -3604,10 +3365,8 @@ function renderTopSalesList(
                     </span>
 
                 </div>
-
             `
         ).join("");
-
 }
 
 
@@ -3622,7 +3381,6 @@ function renderSalesDashboard() {
     renderSalesTrend();
 
     renderSalesCategoryChart();
-
 }
 
 
@@ -3638,10 +3396,8 @@ function renderSalesRanking() {
             0
         );
 
-
     const ranking =
         state.salesRanking;
-
 
     const mine =
         ranking.find(
@@ -3651,7 +3407,6 @@ function renderSalesRanking() {
                 ) === userId
         );
 
-
     setText(
         "metric-sales-rank",
 
@@ -3660,13 +3415,11 @@ function renderSalesRanking() {
             : "-"
     );
 
-
     setText(
         "metric-sales-rank-total",
 
         `dari ${ranking.length} Sales`
     );
-
 
     if (
         $("sales-ranking-summary")
@@ -3692,9 +3445,7 @@ function renderSalesRanking() {
                 `
 
                 : "";
-
     }
-
 
     const visible =
         ranking.slice(
@@ -3702,10 +3453,8 @@ function renderSalesRanking() {
             5
         );
 
-
     if (
         mine &&
-
         !visible.some(
             row =>
                 Number(
@@ -3717,9 +3466,7 @@ function renderSalesRanking() {
         visible.push(
             mine
         );
-
     }
-
 
     if (
         $("sales-ranking-list")
@@ -3750,7 +3497,6 @@ function renderSalesRanking() {
                             #${row.rank}
                         </span>
 
-
                         <div class="rank-person">
 
                             <strong>
@@ -3768,7 +3514,6 @@ function renderSalesRanking() {
 
                         </div>
 
-
                         <strong>
                             ${
                                 Number(
@@ -3779,12 +3524,9 @@ function renderSalesRanking() {
                         </strong>
 
                     </div>
-
                 `
             ).join("");
-
     }
-
 }
 
 
@@ -3797,20 +3539,15 @@ function renderSalesTrend() {
     const canvas =
         $("sales-progress-chart");
 
-
     if (
         !canvas ||
         typeof Chart ===
             "undefined"
     ) {
-
         return;
-
     }
 
-
     const grouped = {};
-
 
     state.transactions
         .forEach(
@@ -3822,13 +3559,9 @@ function renderSalesTrend() {
                         ""
                     );
 
-
                 if (!date) {
-
                     return;
-
                 }
-
 
                 grouped[date] =
                     (
@@ -3841,26 +3574,19 @@ function renderSalesTrend() {
                             row.quantity
                         ) || 0
                     );
-
             }
         );
-
 
     const dates =
         Object
             .keys(grouped)
             .sort();
 
-
     if (
         salesProgressChart
     ) {
-
-        salesProgressChart
-            .destroy();
-
+        salesProgressChart.destroy();
     }
-
 
     salesProgressChart =
         new Chart(
@@ -3870,7 +3596,6 @@ function renderSalesTrend() {
                 type:
                     "line",
 
-
                 data: {
 
                     labels:
@@ -3878,14 +3603,11 @@ function renderSalesTrend() {
                             formatChartDate
                         ),
 
-
                     datasets: [
 
                         {
-
                             label:
                                 "Penjualan Saya",
-
 
                             data:
                                 dates.map(
@@ -3895,54 +3617,39 @@ function renderSalesTrend() {
                                         ]
                                 ),
 
-
                             borderColor:
                                 "#0d72d9",
-
 
                             backgroundColor:
                                 "rgba(13,114,217,.10)",
 
-
                             borderWidth:
                                 3,
-
 
                             tension:
                                 .35,
 
-
                             fill:
                                 true
-
                         }
-
                     ]
-
                 },
-
 
                 options: {
 
                     responsive:
                         true,
 
-
                     maintainAspectRatio:
                         false,
-
 
                     plugins: {
 
                         legend: {
-
                             display:
                                 false
-
                         }
-
                     },
-
 
                     scales: {
 
@@ -3951,23 +3658,15 @@ function renderSalesTrend() {
                             beginAtZero:
                                 true,
 
-
                             ticks: {
-
                                 precision:
                                     0
-
                             }
-
                         }
-
                     }
-
                 }
-
             }
         );
-
 }
 
 
@@ -3980,17 +3679,13 @@ function renderSalesCategoryChart() {
     const canvas =
         $("sales-category-chart");
 
-
     if (
         !canvas ||
         typeof Chart ===
             "undefined"
     ) {
-
         return;
-
     }
-
 
     const prioritas =
         totalQuantity(
@@ -4001,7 +3696,6 @@ function renderSalesCategoryChart() {
             )
         );
 
-
     const home =
         totalQuantity(
             state.transactions.filter(
@@ -4011,16 +3705,11 @@ function renderSalesCategoryChart() {
             )
         );
 
-
     if (
         salesCategoryChart
     ) {
-
-        salesCategoryChart
-            .destroy();
-
+        salesCategoryChart.destroy();
     }
-
 
     salesCategoryChart =
         new Chart(
@@ -4030,75 +3719,50 @@ function renderSalesCategoryChart() {
                 type:
                     "bar",
 
-
                 data: {
 
                     labels: [
-
                         "XL Prioritas",
-
                         "XLHome"
-
                     ],
-
 
                     datasets: [
 
                         {
-
                             label:
                                 "Penjualan Saya",
 
-
                             data: [
-
                                 prioritas,
-
                                 home
-
                             ],
-
 
                             backgroundColor: [
-
                                 "#0d72d9",
-
                                 "#07936a"
-
                             ],
-
 
                             borderRadius:
                                 8
-
                         }
-
                     ]
-
                 },
-
 
                 options: {
 
                     responsive:
                         true,
 
-
                     maintainAspectRatio:
                         false,
-
 
                     plugins: {
 
                         legend: {
-
                             display:
                                 false
-
                         }
-
                     },
-
 
                     scales: {
 
@@ -4107,23 +3771,15 @@ function renderSalesCategoryChart() {
                             beginAtZero:
                                 true,
 
-
                             ticks: {
-
                                 precision:
                                     0
-
                             }
-
                         }
-
                     }
-
                 }
-
             }
         );
-
 }
 
 // =========================================================
@@ -4233,13 +3889,17 @@ function renderRecap() {
                 rows.map(row => {
 
                     const total =
-                        (Number(
-                            row.price
-                        ) || 0)
+                        (
+                            Number(
+                                row.price
+                            ) || 0
+                        )
                         *
-                        (Number(
-                            row.quantity
-                        ) || 0);
+                        (
+                            Number(
+                                row.quantity
+                            ) || 0
+                        );
 
                     return `
                         <tr>
@@ -4312,31 +3972,24 @@ function renderRecap() {
     "filter-store",
     "filter-product",
     "filter-channel"
-].forEach(id => {
+]
+.forEach(id => {
 
     $(id)
         ?.addEventListener(
             "change",
             renderRecap
         );
-
 });
 
 
 // =========================================================
 // TARGET & ACHIEVEMENT
-// DAILY TARGET ONLY
 // =========================================================
 
 function renderTargets() {
 
-    /*
-    Menu Target & Achievement sekarang menggunakan
-    daily_targets per kategori, bukan target bulanan per Sales.
-    */
-
     renderDailyTargets();
-
 }
 
 
@@ -4367,39 +4020,44 @@ function renderVisitor() {
     }
 
     container.innerHTML =
-        state.visitors.map(row => `
+        state.visitors
+            .map(row => `
 
-            <div class="list-item">
+                <div class="list-item">
 
-                <div>
+                    <div>
+
+                        <strong>
+                            ${esc(
+                                row.store_name
+                            )}
+                        </strong>
+
+                        <small>
+                            ${esc(
+                                row.visitor_date
+                            )}
+                        </small>
+
+                    </div>
 
                     <strong>
-                        ${esc(
-                            row.store_name
-                        )}
+                        ${
+                            Number(
+                                row.visitor_count
+                            ) || 0
+                        }
                     </strong>
 
-                    <small>
-                        ${esc(
-                            row.visitor_date
-                        )}
-                    </small>
-
                 </div>
-
-                <strong>
-                    ${
-                        Number(
-                            row.visitor_count
-                        ) || 0
-                    }
-                </strong>
-
-            </div>
-        `).join("");
-
+            `)
+            .join("");
 }
 
+
+// =========================================================
+// SAVE VISITOR
+// =========================================================
 
 $("visitor-form")
     ?.addEventListener(
@@ -4447,7 +4105,9 @@ $("visitor-form")
                 await api(
                     "./api/visitors.php",
                     {
-                        method: "POST",
+                        method:
+                            "POST",
+
                         body
                     }
                 );
@@ -4471,9 +4131,7 @@ $("visitor-form")
                 toast(
                     error.message
                 );
-
             }
-
         }
     );
 
@@ -4497,7 +4155,6 @@ function renderMaster() {
         row => row.id,
         row => row.store_name
     );
-
 }
 
 
@@ -4532,7 +4189,6 @@ function renderStoreMaster() {
 
                         </div>
 
-
                         <div class="master-item-actions">
 
                             <button
@@ -4542,7 +4198,6 @@ function renderStoreMaster() {
                             >
                                 Edit
                             </button>
-
 
                             <button
                                 type="button"
@@ -4564,7 +4219,6 @@ function renderStoreMaster() {
                     Belum ada Store.
                 </p>
             `;
-
 }
 
 
@@ -4612,7 +4266,6 @@ function renderSalesMaster() {
 
                         </div>
 
-
                         <div class="master-item-actions">
 
                             <button
@@ -4622,7 +4275,6 @@ function renderSalesMaster() {
                             >
                                 Edit
                             </button>
-
 
                             <button
                                 type="button"
@@ -4644,7 +4296,6 @@ function renderSalesMaster() {
                     Belum ada Sales.
                 </p>
             `;
-
 }
 
 
@@ -4689,7 +4340,6 @@ function renderPlanMaster() {
 
                         </div>
 
-
                         <div class="master-item-actions">
 
                             <button
@@ -4699,7 +4349,6 @@ function renderPlanMaster() {
                             >
                                 Edit
                             </button>
-
 
                             <button
                                 type="button"
@@ -4721,7 +4370,6 @@ function renderPlanMaster() {
                     Belum ada Price Plan.
                 </p>
             `;
-
 }
 
 
@@ -4748,7 +4396,6 @@ function resetStoreForm() {
         ?.classList.add(
             "hidden"
         );
-
 }
 
 
@@ -4779,7 +4426,6 @@ function resetSalesForm() {
         row => row.id,
         row => row.store_name
     );
-
 }
 
 
@@ -4802,7 +4448,6 @@ function resetPlanForm() {
         ?.classList.add(
             "hidden"
         );
-
 }
 
 
@@ -4848,7 +4493,8 @@ $("store-form")
             const name =
                 getValue(
                     "store-name"
-                ).trim();
+                )
+                .trim();
 
             if (!name) {
 
@@ -4864,13 +4510,16 @@ $("store-form")
                 await api(
                     "./api/stores.php",
                     {
+
                         method:
                             id
                                 ? "PUT"
                                 : "POST",
 
                         body: {
+
                             id,
+
                             store_name:
                                 name
                         }
@@ -4892,9 +4541,7 @@ $("store-form")
                 toast(
                     error.message
                 );
-
             }
-
         }
     );
 
@@ -4924,7 +4571,8 @@ $("sales-form")
                 full_name:
                     getValue(
                         "sales-name"
-                    ).trim(),
+                    )
+                    .trim(),
 
                 sales_type:
                     getValue(
@@ -4958,6 +4606,7 @@ $("sales-form")
                     await api(
                         "./api/sales.php",
                         {
+
                             method:
                                 id
                                     ? "PUT"
@@ -4987,7 +4636,6 @@ $("sales-form")
                             ? "Sales diperbarui."
                             : "Sales ditambahkan."
                     );
-
                 }
 
             } catch (error) {
@@ -4995,9 +4643,7 @@ $("sales-form")
                 toast(
                     error.message
                 );
-
             }
-
         }
     );
 
@@ -5045,6 +4691,7 @@ $("plan-form")
                 !body.product ||
                 !body.price_plan
             ) {
+
                 toast(
                     "Lengkapi Price Plan."
                 );
@@ -5067,6 +4714,7 @@ $("plan-form")
                 );
 
                 resetPlanForm();
+
                 await loadData();
 
                 toast(
@@ -5076,6 +4724,7 @@ $("plan-form")
                 );
 
             } catch (error) {
+
                 toast(
                     error.message
                 );
@@ -5092,7 +4741,9 @@ document.addEventListener(
     "click",
     async event => {
 
+        // =====================================================
         // EDIT STORE
+        // =====================================================
 
         const editStore =
             event.target.closest(
@@ -5104,9 +4755,12 @@ document.addEventListener(
             const row =
                 state.stores.find(
                     item =>
-                        Number(item.id) ===
                         Number(
-                            editStore.dataset
+                            item.id
+                        ) ===
+                        Number(
+                            editStore
+                                .dataset
                                 .editStore
                         )
                 );
@@ -5138,7 +4792,9 @@ document.addEventListener(
         }
 
 
+        // =====================================================
         // EDIT SALES
+        // =====================================================
 
         const editSales =
             event.target.closest(
@@ -5150,9 +4806,12 @@ document.addEventListener(
             const row =
                 state.sales.find(
                     item =>
-                        Number(item.id) ===
                         Number(
-                            editSales.dataset
+                            item.id
+                        ) ===
+                        Number(
+                            editSales
+                                .dataset
                                 .editSales
                         )
                 );
@@ -5194,7 +4853,9 @@ document.addEventListener(
         }
 
 
+        // =====================================================
         // EDIT PLAN
+        // =====================================================
 
         const editPlan =
             event.target.closest(
@@ -5206,9 +4867,12 @@ document.addEventListener(
             const row =
                 state.plans.find(
                     item =>
-                        Number(item.id) ===
                         Number(
-                            editPlan.dataset
+                            item.id
+                        ) ===
+                        Number(
+                            editPlan
+                                .dataset
                                 .editPlan
                         )
                 );
@@ -5250,7 +4914,9 @@ document.addEventListener(
         }
 
 
+        // =====================================================
         // DELETE STORE
+        // =====================================================
 
         const deleteStore =
             event.target.closest(
@@ -5271,11 +4937,13 @@ document.addEventListener(
 
                 await api(
                     `./api/stores.php?id=${
-                        deleteStore.dataset
+                        deleteStore
+                            .dataset
                             .deleteStore
                     }`,
                     {
-                        method: "DELETE"
+                        method:
+                            "DELETE"
                     }
                 );
 
@@ -5286,6 +4954,7 @@ document.addEventListener(
                 );
 
             } catch (error) {
+
                 toast(
                     error.message
                 );
@@ -5295,7 +4964,9 @@ document.addEventListener(
         }
 
 
+        // =====================================================
         // DELETE SALES
+        // =====================================================
 
         const deleteSales =
             event.target.closest(
@@ -5316,11 +4987,13 @@ document.addEventListener(
 
                 await api(
                     `./api/sales.php?id=${
-                        deleteSales.dataset
+                        deleteSales
+                            .dataset
                             .deleteSales
                     }`,
                     {
-                        method: "DELETE"
+                        method:
+                            "DELETE"
                     }
                 );
 
@@ -5331,6 +5004,7 @@ document.addEventListener(
                 );
 
             } catch (error) {
+
                 toast(
                     error.message
                 );
@@ -5340,7 +5014,9 @@ document.addEventListener(
         }
 
 
+        // =====================================================
         // DELETE PLAN
+        // =====================================================
 
         const deletePlan =
             event.target.closest(
@@ -5361,11 +5037,13 @@ document.addEventListener(
 
                 await api(
                     `./api/plans.php?id=${
-                        deletePlan.dataset
+                        deletePlan
+                            .dataset
                             .deletePlan
                     }`,
                     {
-                        method: "DELETE"
+                        method:
+                            "DELETE"
                     }
                 );
 
@@ -5376,6 +5054,7 @@ document.addEventListener(
                 );
 
             } catch (error) {
+
                 toast(
                     error.message
                 );
@@ -5386,7 +5065,7 @@ document.addEventListener(
 
 
 // =========================================================
-// DELETE ALL MASTER
+// DELETE ALL STORE
 // =========================================================
 
 $("delete-all-stores")
@@ -5407,7 +5086,8 @@ $("delete-all-stores")
                 await api(
                     "./api/stores.php?all=1",
                     {
-                        method: "DELETE"
+                        method:
+                            "DELETE"
                     }
                 );
 
@@ -5418,6 +5098,7 @@ $("delete-all-stores")
                 );
 
             } catch (error) {
+
                 toast(
                     error.message
                 );
@@ -5425,6 +5106,10 @@ $("delete-all-stores")
         }
     );
 
+
+// =========================================================
+// DELETE ALL SALES
+// =========================================================
 
 $("delete-all-sales")
     ?.addEventListener(
@@ -5444,7 +5129,8 @@ $("delete-all-sales")
                 await api(
                     "./api/sales.php?all=1",
                     {
-                        method: "DELETE"
+                        method:
+                            "DELETE"
                     }
                 );
 
@@ -5455,6 +5141,7 @@ $("delete-all-sales")
                 );
 
             } catch (error) {
+
                 toast(
                     error.message
                 );
@@ -5462,6 +5149,10 @@ $("delete-all-sales")
         }
     );
 
+
+// =========================================================
+// DELETE ALL PLAN
+// =========================================================
 
 $("delete-all-plans")
     ?.addEventListener(
@@ -5481,7 +5172,8 @@ $("delete-all-plans")
                 await api(
                     "./api/plans.php?all=1",
                     {
-                        method: "DELETE"
+                        method:
+                            "DELETE"
                     }
                 );
 
@@ -5492,6 +5184,7 @@ $("delete-all-plans")
                 );
 
             } catch (error) {
+
                 toast(
                     error.message
                 );
@@ -5501,17 +5194,22 @@ $("delete-all-plans")
 
 
 // =========================================================
-// CSV DOWNLOAD
+// CSV ESCAPE
 // =========================================================
 
 function csvEscape(value) {
 
     const text =
-        String(value ?? "");
+        String(
+            value ?? ""
+        );
 
     if (
-        /[",\n]/.test(text)
+        /[",\n]/.test(
+            text
+        )
     ) {
+
         return `"${text.replaceAll(
             '"',
             '""'
@@ -5522,6 +5220,10 @@ function csvEscape(value) {
 }
 
 
+// =========================================================
+// DOWNLOAD CSV
+// =========================================================
+
 function downloadCSV(
     filename,
     headers,
@@ -5531,13 +5233,17 @@ function downloadCSV(
     const content = [
 
         headers
-            .map(csvEscape)
+            .map(
+                csvEscape
+            )
             .join(","),
 
         ...rows.map(
             row =>
                 row
-                    .map(csvEscape)
+                    .map(
+                        csvEscape
+                    )
                     .join(",")
         )
 
@@ -5561,20 +5267,34 @@ function downloadCSV(
         );
 
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
-    link.href = url;
-    link.download = filename;
+    link.href =
+        url;
+
+    link.download =
+        filename;
 
     document.body
-        .appendChild(link);
+        .appendChild(
+            link
+        );
 
     link.click();
+
     link.remove();
 
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(
+        url
+    );
 }
 
+
+// =========================================================
+// DOWNLOAD STORE
+// =========================================================
 
 $("store-download")
     ?.addEventListener(
@@ -5582,10 +5302,13 @@ $("store-download")
         () => {
 
             downloadCSV(
+
                 "data-store.csv",
+
                 [
                     "store_name"
                 ],
+
                 state.stores.map(
                     row => [
                         row.store_name
@@ -5596,22 +5319,32 @@ $("store-download")
     );
 
 
+// =========================================================
+// DOWNLOAD SALES
+// =========================================================
+
 $("sales-download")
     ?.addEventListener(
         "click",
         () => {
 
             downloadCSV(
+
                 "data-sales.csv",
+
                 [
                     "full_name",
                     "sales_type",
                     "store_name"
                 ],
+
                 state.sales.map(
                     row => [
+
                         row.full_name,
+
                         row.sales_type,
+
                         row.default_store ||
                         row.store_name ||
                         ""
@@ -5622,22 +5355,32 @@ $("sales-download")
     );
 
 
+// =========================================================
+// DOWNLOAD PRICE PLAN
+// =========================================================
+
 $("plan-download")
     ?.addEventListener(
         "click",
         () => {
 
             downloadCSV(
+
                 "price-plan.csv",
+
                 [
                     "product",
                     "price_plan",
                     "price"
                 ],
+
                 state.plans.map(
                     row => [
+
                         row.product,
+
                         row.price_plan,
+
                         row.price
                     ]
                 )
@@ -5654,24 +5397,34 @@ function parseCSV(text) {
 
     const lines =
         String(text)
-            .replace(/\r/g, "")
+            .replace(
+                /\r/g,
+                ""
+            )
             .split("\n")
             .filter(
                 line =>
                     line.trim() !== ""
             );
 
-    if (!lines.length) {
+    if (
+        !lines.length
+    ) {
         return [];
     }
+
 
     const parseLine =
         line => {
 
-            const result = [];
+            const result =
+                [];
 
-            let cell = "";
-            let quoted = false;
+            let cell =
+                "";
+
+            let quoted =
+                false;
 
             for (
                 let i = 0;
@@ -5693,9 +5446,13 @@ function parseCSV(text) {
                         quoted &&
                         next === '"'
                     ) {
+
                         cell += '"';
+
                         i++;
+
                     } else {
+
                         quoted =
                             !quoted;
                     }
@@ -5709,51 +5466,69 @@ function parseCSV(text) {
                         cell
                     );
 
-                    cell = "";
+                    cell =
+                        "";
 
                 } else {
 
-                    cell += char;
+                    cell +=
+                        char;
                 }
             }
 
-            result.push(cell);
+            result.push(
+                cell
+            );
 
             return result;
         };
 
+
     const headers =
         parseLine(
             lines[0]
-        ).map(
+        )
+        .map(
             value =>
                 value
                     .trim()
                     .toLowerCase()
         );
 
+
     return lines
         .slice(1)
-        .map(line => {
+        .map(
+            line => {
 
-            const cells =
-                parseLine(line);
+                const cells =
+                    parseLine(
+                        line
+                    );
 
-            const row = {};
+                const row =
+                    {};
 
-            headers.forEach(
-                (header, index) => {
+                headers
+                    .forEach(
+                        (
+                            header,
+                            index
+                        ) => {
 
-                    row[header] =
-                        cells[index] ??
-                        "";
-                }
-            );
+                            row[
+                                header
+                            ] =
+                                cells[
+                                    index
+                                ] ?? "";
+                        }
+                    );
 
-            return row;
-        });
+                return row;
+            }
+        );
 }
-
 
 // =========================================================
 // CSV UPLOAD STORE
@@ -5765,7 +5540,8 @@ $("store-upload")
         async event => {
 
             const file =
-                event.target.files?.[0];
+                event.target
+                    .files?.[0];
 
             if (!file) {
                 return;
@@ -5778,7 +5554,8 @@ $("store-upload")
                         await file.text()
                     );
 
-                let success = 0;
+                let success =
+                    0;
 
                 for (
                     const row of rows
@@ -5801,7 +5578,9 @@ $("store-upload")
                         await api(
                             "./api/stores.php",
                             {
-                                method: "POST",
+                                method:
+                                    "POST",
+
                                 body: {
                                     store_name:
                                         name
@@ -5812,7 +5591,9 @@ $("store-upload")
                         success++;
 
                     } catch (error) {
+
                         console.warn(
+                            "IMPORT STORE:",
                             error
                         );
                     }
@@ -5828,6 +5609,7 @@ $("store-upload")
                 );
 
             } catch (error) {
+
                 toast(
                     error.message
                 );
@@ -5846,7 +5628,8 @@ $("sales-upload")
         async event => {
 
             const file =
-                event.target.files?.[0];
+                event.target
+                    .files?.[0];
 
             if (!file) {
                 return;
@@ -5859,7 +5642,8 @@ $("sales-upload")
                         await file.text()
                     );
 
-                let success = 0;
+                let success =
+                    0;
 
                 for (
                     const row of rows
@@ -5892,6 +5676,7 @@ $("sales-upload")
                         normalized ===
                         "walk in"
                     ) {
+
                         type =
                             "Walk-in";
                     }
@@ -5900,6 +5685,7 @@ $("sales-upload")
                         normalized ===
                         "walk out"
                     ) {
+
                         type =
                             "Walk-out";
                     }
@@ -5917,8 +5703,11 @@ $("sales-upload")
                             item =>
                                 String(
                                     item.store_name
-                                ).toLowerCase() ===
-                                storeName.toLowerCase()
+                                )
+                                .toLowerCase()
+                                ===
+                                storeName
+                                    .toLowerCase()
                         );
 
                     if (
@@ -5929,6 +5718,7 @@ $("sales-upload")
                             "Walk-out"
                         ].includes(type)
                     ) {
+
                         continue;
                     }
 
@@ -5937,12 +5727,17 @@ $("sales-upload")
                         await api(
                             "./api/sales.php",
                             {
-                                method: "POST",
+                                method:
+                                    "POST",
+
                                 body: {
+
                                     full_name:
                                         name,
+
                                     sales_type:
                                         type,
+
                                     default_store_id:
                                         Number(
                                             store.id
@@ -5954,7 +5749,9 @@ $("sales-upload")
                         success++;
 
                     } catch (error) {
+
                         console.warn(
+                            "IMPORT SALES:",
                             error
                         );
                     }
@@ -5970,6 +5767,7 @@ $("sales-upload")
                 );
 
             } catch (error) {
+
                 toast(
                     error.message
                 );
@@ -5979,7 +5777,7 @@ $("sales-upload")
 
 
 // =========================================================
-// CSV UPLOAD PLAN
+// CSV UPLOAD PRICE PLAN
 // =========================================================
 
 $("plan-upload")
@@ -5988,7 +5786,8 @@ $("plan-upload")
         async event => {
 
             const file =
-                event.target.files?.[0];
+                event.target
+                    .files?.[0];
 
             if (!file) {
                 return;
@@ -6001,7 +5800,8 @@ $("plan-upload")
                         await file.text()
                     );
 
-                let success = 0;
+                let success =
+                    0;
 
                 for (
                     const row of rows
@@ -6047,9 +5847,13 @@ $("plan-upload")
                         ![
                             "XL Prioritas",
                             "XLHome"
-                        ].includes(product) ||
+                        ].includes(
+                            product
+                        )
+                        ||
                         !plan
                     ) {
+
                         continue;
                     }
 
@@ -6058,11 +5862,16 @@ $("plan-upload")
                         await api(
                             "./api/plans.php",
                             {
-                                method: "POST",
+                                method:
+                                    "POST",
+
                                 body: {
+
                                     product,
+
                                     price_plan:
                                         plan,
+
                                     price
                                 }
                             }
@@ -6071,7 +5880,9 @@ $("plan-upload")
                         success++;
 
                     } catch (error) {
+
                         console.warn(
+                            "IMPORT PLAN:",
                             error
                         );
                     }
@@ -6087,6 +5898,7 @@ $("plan-upload")
                 );
 
             } catch (error) {
+
                 toast(
                     error.message
                 );
@@ -6120,7 +5932,10 @@ function scheduleMidnightRefresh() {
 
     setTimeout(
         () => {
-            window.location.reload();
+
+            window.location
+                .reload();
+
         },
         delay
     );
@@ -6159,16 +5974,11 @@ calculateTotal();
 
 // =========================================================
 // SESSION RESTORE
-// F5 TIDAK BOLEH LOGOUT
 // =========================================================
 
 async function initializeApplication() {
 
     try {
-
-        /*
-        CEK PHP SESSION DULU.
-        */
 
         const session =
             await api(
@@ -6180,13 +5990,10 @@ async function initializeApplication() {
             session
         );
 
-        /*
-        MASIH LOGIN:
-        langsung masuk akun sebelumnya.
-        */
-
         if (
-            session.logged_in === true &&
+            session.logged_in ===
+                true
+            &&
             session.user
         ) {
 
@@ -6204,32 +6011,21 @@ async function initializeApplication() {
             return;
         }
 
-        /*
-        BELUM LOGIN.
-        */
+        state.user =
+            null;
 
-        state.user = null;
-        state.role = "";
-        state.selectedRole = "";
+        state.role =
+            "";
+
+        state.selectedRole =
+            "";
 
         /*
-        Landing tampil dulu.
+        Tidak mengambil data Price Plan
+        saat masih berada di landing publik.
         */
 
         showLanding();
-
-        /*
-        Baru coba ambil data publik.
-        */
-
-        try {
-            await loadData();
-        } catch (error) {
-            console.warn(
-                "PUBLIC BOOTSTRAP:",
-                error
-            );
-        }
 
     } catch (error) {
 
@@ -6238,20 +6034,16 @@ async function initializeApplication() {
             error
         );
 
-        state.user = null;
-        state.role = "";
-        state.selectedRole = "";
+        state.user =
+            null;
+
+        state.role =
+            "";
+
+        state.selectedRole =
+            "";
 
         showLanding();
-
-        try {
-            await loadData();
-        } catch (loadError) {
-            console.warn(
-                "BOOTSTRAP ERROR:",
-                loadError
-            );
-        }
     }
 }
 
