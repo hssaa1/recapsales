@@ -1,0 +1,2644 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>XL Sales & Promo</title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="./logo.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="./style.css?v=20261002-TARGET-FINAL1"
+    >
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"
+        defer
+    ></script>
+
+    <script
+        src="./app.js?v=20261002-TARGET-FINAL1"
+        defer
+    ></script>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     LANDING PAGE
+========================================================= -->
+
+<section
+    id="landing-screen"
+    class="screen landing-screen active"
+>
+
+    <!-- NAVBAR -->
+
+    <header class="landing-navbar">
+
+        <a
+            href="#home"
+            class="landing-brand"
+        >
+
+            <span class="landing-logo">
+
+                <img
+                    src="./logo.png"
+                    alt="XL"
+                >
+
+            </span>
+
+
+            <span>
+
+                <strong>
+                    XL
+                </strong>
+
+                <small>
+                    Prioritas & XLHome
+                </small>
+
+            </span>
+
+        </a>
+
+
+        <nav class="landing-nav-links">
+
+            <a href="#promo">
+                Promo
+            </a>
+
+            <a href="#prioritas">
+                XL Prioritas
+            </a>
+
+            <a href="#xlhome">
+                XLHome
+            </a>
+
+            <a href="#benefit">
+                Benefit
+            </a>
+
+        </nav>
+
+
+        <div class="landing-login-actions">
+
+            <button
+                id="landing-login-sales"
+                type="button"
+                class="nav-login secondary"
+            >
+                Login Sales
+            </button>
+
+
+            <button
+                id="landing-login-admin"
+                type="button"
+                class="nav-login primary"
+            >
+                Login Admin
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
+
+        <section
+            id="home"
+            class="hero-section"
+        >
+
+            <div class="hero-copy">
+
+                <span class="eyebrow">
+                    XL PRIORITAS & XLHOME
+                </span>
+
+
+                <h1>
+                    Koneksi yang lebih pas
+                    untuk kebutuhanmu.
+                </h1>
+
+
+                <p>
+                    Nikmati pilihan paket XL Prioritas
+                    dan internet rumah XLHome dalam
+                    satu halaman yang ringkas,
+                    modern, dan mudah dipahami.
+                </p>
+
+
+                <div class="hero-actions">
+
+                    <a
+                        href="#promo"
+                        class="cta-button primary"
+                    >
+                        Lihat Promo
+                    </a>
+
+
+                    <a
+                        href="#contact"
+                        class="cta-button secondary"
+                    >
+                        Hubungi Sales
+                    </a>
+
+                </div>
+
+
+                <div class="hero-mini-stats">
+
+                    <div>
+
+                        <strong>
+                            XL Prioritas
+                        </strong>
+
+                        <span>
+                            Paket pascabayar fleksibel
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            XLHome
+                        </strong>
+
+                        <span>
+                            Internet rumah berkecepatan tinggi
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="hero-visual">
+
+                <div class="hero-card hero-card-main">
+
+                    <img
+                        src="./logo.png"
+                        alt="XL"
+                    >
+
+
+                    <span>
+                        Stay connected
+                    </span>
+
+
+                    <strong>
+                        Lebih dekat,
+                        lebih cepat,
+                        lebih fleksibel.
+                    </strong>
+
+                </div>
+
+
+                <div class="hero-orbit orbit-one"></div>
+
+                <div class="hero-orbit orbit-two"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PAKET
+        ====================================================== -->
+
+        <section
+            id="promo"
+            class="landing-section"
+        >
+
+            <div class="landing-section-heading">
+
+                <span class="eyebrow">
+                    PROMO & PAKET
+                </span>
+
+
+                <h2>
+                    Pilih paket yang sesuai
+                </h2>
+
+
+                <p>
+                    Daftar paket otomatis mengikuti
+                    Price Plan yang dikelola Admin.
+                </p>
+
+            </div>
+
+
+            <div class="product-switcher">
+
+                <button
+                    type="button"
+                    class="product-tab active"
+                    data-public-product="all"
+                >
+                    Semua
+                </button>
+
+
+                <button
+                    type="button"
+                    class="product-tab"
+                    data-public-product="XL Prioritas"
+                >
+                    XL Prioritas
+                </button>
+
+
+                <button
+                    type="button"
+                    class="product-tab"
+                    data-public-product="XLHome"
+                >
+                    XLHome
+                </button>
+
+            </div>
+
+
+            <div
+                id="public-plan-grid"
+                class="public-plan-grid"
+            ></div>
+
+
+            <p
+                id="public-plan-empty"
+                class="landing-empty hidden"
+            >
+                Belum ada paket yang tersedia.
+            </p>
+
+        </section>
+
+
+        <!-- =====================================================
+             PRODUCT HIGHLIGHT
+        ====================================================== -->
+
+        <section class="product-highlight-grid">
+
+            <!-- XL PRIORITAS -->
+
+            <article
+                id="prioritas"
+                class="product-highlight prioritas-highlight"
+            >
+
+                <span class="eyebrow">
+                    XL PRIORITAS
+                </span>
+
+
+                <h2>
+                    Prioritas untuk komunikasi
+                    yang lebih fleksibel.
+                </h2>
+
+
+                <p>
+                    Pilih paket pascabayar sesuai kebutuhan
+                    penggunaan dan budget bulananmu.
+                </p>
+
+
+                <a
+                    href="#promo"
+                    class="text-link"
+                    data-jump-product="XL Prioritas"
+                >
+                    Lihat paket XL Prioritas →
+                </a>
+
+            </article>
+
+
+            <!-- XLHOME -->
+
+            <article
+                id="xlhome"
+                class="product-highlight home-highlight"
+            >
+
+                <span class="eyebrow">
+                    XLHOME
+                </span>
+
+
+                <h2>
+                    Internet rumah untuk
+                    aktivitas tanpa putus.
+                </h2>
+
+
+                <p>
+                    Pilih paket internet rumah sesuai kebutuhan
+                    streaming, kerja, belajar, dan hiburan.
+                </p>
+
+
+                <a
+                    href="#promo"
+                    class="text-link"
+                    data-jump-product="XLHome"
+                >
+                    Lihat paket XLHome →
+                </a>
+
+            </article>
+
+        </section>
+
+
+        <!-- =====================================================
+             BENEFIT
+        ====================================================== -->
+
+        <section
+            id="benefit"
+            class="landing-section benefit-section"
+        >
+
+            <div class="landing-section-heading">
+
+                <span class="eyebrow">
+                    BENEFIT
+                </span>
+
+
+                <h2>
+                    Satu tempat untuk menemukan
+                    pilihan yang tepat
+                </h2>
+
+            </div>
+
+
+            <div class="benefit-grid">
+
+                <article>
+
+                    <strong>
+                        Pilihan fleksibel
+                    </strong>
+
+                    <p>
+                        Bandingkan paket berdasarkan
+                        produk dan harga.
+                    </p>
+
+                </article>
+
+
+                <article>
+
+                    <strong>
+                        Informasi ringkas
+                    </strong>
+
+                    <p>
+                        Paket utama ditampilkan
+                        tanpa menu yang membingungkan.
+                    </p>
+
+                </article>
+
+
+                <article>
+
+                    <strong>
+                        Mudah dihubungi
+                    </strong>
+
+                    <p>
+                        Pengunjung dapat diarahkan
+                        ke Sales untuk informasi lanjutan.
+                    </p>
+
+                </article>
+
+
+                <article>
+
+                    <strong>
+                        Selalu terbarui
+                    </strong>
+
+                    <p>
+                        Daftar paket mengikuti
+                        Master Data Price Plan Admin.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             CTA
+        ====================================================== -->
+
+        <section
+            id="contact"
+            class="landing-cta-section"
+        >
+
+            <div>
+
+                <span class="eyebrow light">
+                    BUTUH BANTUAN?
+                </span>
+
+
+                <h2>
+                    Temukan paket yang
+                    cocok untukmu.
+                </h2>
+
+
+                <p>
+                    Hubungi Sales untuk informasi
+                    ketersediaan, promo, dan pendaftaran.
+                </p>
+
+            </div>
+
+
+            <button
+                id="public-contact-sales"
+                type="button"
+                class="cta-button white contact-button"
+            >
+                Hubungi Sales
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer class="landing-footer">
+
+        <div class="landing-brand compact">
+
+            <span class="landing-logo">
+
+                <img
+                    src="./logo.png"
+                    alt="XL"
+                >
+
+            </span>
+
+
+            <span>
+
+                <strong>
+                    XL Sales
+                </strong>
+
+                <small>
+                    Prioritas & XLHome
+                </small>
+
+            </span>
+
+        </div>
+
+
+        <small>
+            Informasi paket mengikuti
+            data yang tersedia pada sistem.
+        </small>
+
+    </footer>
+
+</section>
+
+<!-- =========================================================
+     LOGIN
+========================================================= -->
+
+<section
+    id="login-screen"
+    class="screen login-screen"
+>
+
+    <div class="login-card">
+
+        <button
+            id="back-to-landing"
+            type="button"
+            class="back-button"
+        >
+            ← Kembali
+        </button>
+
+
+        <div class="login-logo">
+
+            <img
+                src="./logo.png"
+                alt="XL"
+            >
+
+        </div>
+
+
+        <span class="login-kicker">
+            XL SALES DASHBOARD
+        </span>
+
+
+        <h1 id="login-title">
+            Login
+        </h1>
+
+
+        <span
+            id="login-role-chip"
+            class="login-role"
+        >
+            Access
+        </span>
+
+
+        <p
+            id="login-description"
+            class="login-description"
+        >
+            Masukkan akun.
+        </p>
+
+
+        <form id="login-form">
+
+            <label for="login-username">
+                Username
+            </label>
+
+            <input
+                id="login-username"
+                type="text"
+                required
+            >
+
+
+            <label for="login-password">
+                Password
+            </label>
+
+            <div class="password-wrapper">
+
+                <input
+                    id="login-password"
+                    type="password"
+                    required
+                >
+
+                <button
+                    id="toggle-password"
+                    type="button"
+                >
+                    Lihat
+                </button>
+
+            </div>
+
+
+            <p
+                id="login-status"
+                class="form-status"
+            ></p>
+
+
+            <button
+                type="submit"
+                class="primary-button login-submit"
+            >
+                Login
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     INTERNAL APPLICATION
+========================================================= -->
+
+<section
+    id="app-screen"
+    class="screen app-screen"
+>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="sidebar-logo">
+
+                <img
+                    src="./logo.png"
+                    alt="XL"
+                >
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    XL Sales
+                </strong>
+
+                <small>
+                    Performance Dashboard
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <button
+                type="button"
+                class="nav-button active"
+                data-view="dashboard"
+            >
+                Dashboard
+            </button>
+
+            <button
+                type="button"
+                class="nav-button"
+                data-view="input"
+            >
+                Input Penjualan
+            </button>
+
+            <button
+                type="button"
+                class="nav-button"
+                data-view="recap"
+            >
+                Recap
+            </button>
+
+            <button
+                type="button"
+                class="nav-button admin-only"
+                data-view="target"
+            >
+                Target & Achievement
+            </button>
+
+            <button
+                type="button"
+                class="nav-button admin-only"
+                data-view="visitor"
+            >
+                Input Visitor
+            </button>
+
+            <button
+                type="button"
+                class="nav-button admin-only"
+                data-view="master"
+            >
+                Master Data
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <div>
+
+                <small>
+                    AKSES AKTIF
+                </small>
+
+                <strong id="active-role">
+                    User
+                </strong>
+
+            </div>
+
+
+            <button
+                id="logout-button"
+                type="button"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- CONTENT -->
+
+    <main class="content-wrapper">
+
+        <header class="topbar">
+
+            <div>
+
+                <small id="page-kicker">
+                    Ringkasan performa
+                </small>
+
+                <h1 id="page-title">
+                    Dashboard Penjualan
+                </h1>
+
+            </div>
+
+
+            <strong id="header-role">
+                Admin
+            </strong>
+
+        </header>
+
+
+        <!-- =====================================================
+             DASHBOARD
+        ====================================================== -->
+
+        <section
+            id="view-dashboard"
+            class="view active"
+        >
+
+            <div class="dashboard-heading">
+
+                <div>
+
+                    <span>
+                        PERFORMANCE
+                    </span>
+
+                    <h2 id="dashboard-heading">
+                        Dashboard
+                    </h2>
+
+                    <p id="dashboard-description">
+                        Ringkasan performa seluruh Sales.
+                    </p>
+
+                </div>
+
+
+                <span
+                    id="dashboard-period"
+                    class="period-badge"
+                >
+                    0 transaksi tercatat
+                </span>
+
+            </div>
+
+
+            <!-- KPI -->
+
+            <div class="metric-grid">
+
+                <div class="metric-card">
+
+                    <span>
+                        Transaksi
+                    </span>
+
+                    <strong id="metric-transactions">
+                        0
+                    </strong>
+
+                    <small>
+                        transaksi
+                    </small>
+
+                </div>
+
+
+                <div class="metric-card">
+
+                    <span>
+                        XL Prioritas
+                    </span>
+
+                    <strong id="metric-prioritas">
+                        0
+                    </strong>
+
+                    <small>
+                        unit
+                    </small>
+
+                </div>
+
+
+                <div class="metric-card">
+
+                    <span>
+                        XLHome
+                    </span>
+
+                    <strong id="metric-home">
+                        0
+                    </strong>
+
+                    <small>
+                        unit
+                    </small>
+
+                </div>
+
+
+                <div
+                    class="metric-card admin-dashboard-only"
+                    id="visitor-metric-card"
+                >
+
+                    <span>
+                        Visitor
+                    </span>
+
+                    <strong id="metric-visitors">
+                        0
+                    </strong>
+
+                    <small>
+                        visitor
+                    </small>
+
+                </div>
+
+
+                <div
+                    id="sales-rank-card"
+                    class="metric-card sales-dashboard-only hidden"
+                >
+
+                    <span>
+                        Ranking Saya
+                    </span>
+
+                    <strong id="metric-sales-rank">
+                        -
+                    </strong>
+
+                    <small id="metric-sales-rank-total">
+                        dari 0 Sales
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- REVENUE -->
+
+            <div class="revenue-grid">
+
+                <div class="revenue-card">
+
+                    <span>
+                        Revenue XL Prioritas
+                    </span>
+
+                    <strong id="metric-revenue-prioritas">
+                        Rp0
+                    </strong>
+
+                </div>
+
+
+                <div class="revenue-card">
+
+                    <span>
+                        Revenue XLHome
+                    </span>
+
+                    <strong id="metric-revenue-home">
+                        Rp0
+                    </strong>
+
+                </div>
+
+            </div>
+
+                <!-- REKAP TITLE -->
+
+                <div class="dashboard-section-heading">
+
+                    <span class="section-label">
+                        SALES PERFORMANCE
+                    </span>
+
+                    <h2>
+                        Rekap Penjualan
+                    </h2>
+
+                    <p>
+                        Grafik perkembangan penjualan
+                        berdasarkan kategori setiap hari.
+                    </p>
+
+                </div>
+
+
+<!-- =====================================================
+     REKAP PENJUALAN - 2 GRAFIK DALAM 1 ROW
+====================================================== -->
+
+<div class="sales-chart-grid">
+
+    <!-- XL PRIORITAS -->
+
+    <div class="dashboard-card product-performance-card">
+
+        <div class="product-performance-heading">
+
+            <div>
+
+                <span class="product-tag tag-prioritas">
+                    XL PRIORITAS
+                </span>
+
+                <h3>
+                    Grafik Penjualan XL Prioritas
+                </h3>
+
+            </div>
+
+
+            <span
+                id="prio-today-status"
+                class="performance-status"
+            >
+                Belum ada target
+            </span>
+
+        </div>
+
+
+        <div class="performance-grid compact">
+
+            <div>
+
+                <span>
+                    Target
+                </span>
+
+                <strong id="prio-effective-target">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Actual
+                </span>
+
+                <strong id="prio-today-actual">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Gap
+                </span>
+
+                <strong id="prio-today-gap">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Achievement
+                </span>
+
+                <strong id="prio-achievement">
+                    0%
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- tetap disimpan untuk logic -->
+        <span
+            id="prio-daily-target"
+            class="hidden"
+        >
+            0
+        </span>
+
+        <span
+            id="prio-carry"
+            class="hidden"
+        >
+            0
+        </span>
+
+
+        <div class="main-chart compact-chart">
+
+            <canvas
+                id="admin-prioritas-chart"
+            ></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- XLHOME -->
+
+    <div class="dashboard-card product-performance-card">
+
+        <div class="product-performance-heading">
+
+            <div>
+
+                <span class="product-tag tag-home">
+                    XLHOME
+                </span>
+
+                <h3>
+                    Grafik Penjualan XLHome
+                </h3>
+
+            </div>
+
+
+            <span
+                id="home-today-status"
+                class="performance-status"
+            >
+                Belum ada target
+            </span>
+
+        </div>
+
+
+        <div class="performance-grid compact">
+
+            <div>
+
+                <span>
+                    Target
+                </span>
+
+                <strong id="home-effective-target">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Actual
+                </span>
+
+                <strong id="home-today-actual">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Gap
+                </span>
+
+                <strong id="home-today-gap">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Achievement
+                </span>
+
+                <strong id="home-achievement">
+                    0%
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- tetap disimpan untuk logic -->
+        <span
+            id="home-daily-target"
+            class="hidden"
+        >
+            0
+        </span>
+
+        <span
+            id="home-carry"
+            class="hidden"
+        >
+            0
+        </span>
+
+
+        <div class="main-chart compact-chart">
+
+            <canvas
+                id="admin-home-chart"
+            ></canvas>
+
+        </div>
+
+    </div>
+
+</div>
+
+                <!-- VISITOR VS TRANSACTION -->
+
+                <div class="dashboard-card">
+
+                    <div class="card-heading">
+
+                        <div>
+
+                            <h3>
+                                Visitor vs Transaksi
+                            </h3>
+
+                            <p>
+                                Perbandingan visitor dan
+                                unit transaksi berdasarkan Store.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="visitor-chart">
+
+                        <canvas
+                            id="visitor-transaction-chart"
+                        ></canvas>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BOTTOM GRID -->
+
+                <div class="dashboard-bottom-grid">
+
+                    <!-- CHANNEL -->
+
+                    <div class="dashboard-card">
+
+                        <div class="card-heading">
+
+                            <div>
+
+                                <h3>
+                                    Channel Breakdown
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="channel-list">
+
+                            <div>
+
+                                <div class="channel-heading">
+
+                                    <span>
+                                        Instore
+                                    </span>
+
+                                    <strong id="admin-instore-total">
+                                        0 unit
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="progress-track">
+
+                                    <div
+                                        id="admin-instore-bar"
+                                        class="progress-bar progress-instore"
+                                    ></div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div>
+
+                                <div class="channel-heading">
+
+                                    <span>
+                                        Outstore
+                                    </span>
+
+                                    <strong id="admin-outstore-total">
+                                        0 unit
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="progress-track">
+
+                                    <div
+                                        id="admin-outstore-bar"
+                                        class="progress-bar progress-outstore"
+                                    ></div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TOP SALES -->
+
+                    <div class="dashboard-card">
+
+                        <div class="card-heading">
+
+                            <div>
+
+                                <h3>
+                                    Top Sales
+                                </h3>
+
+                                <p>
+                                    Ranking berdasarkan revenue transaksi.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="top-sales-grid">
+
+                            <div>
+
+                                <h4 class="top-sales-product prioritas">
+                                    XL Prioritas
+                                </h4>
+
+                                <div
+                                    id="top-sales-prioritas"
+                                    class="top-sales-list"
+                                ></div>
+
+                            </div>
+
+
+                            <div>
+
+                                <h4 class="top-sales-product home">
+                                    XLHome
+                                </h4>
+
+                                <div
+                                    id="top-sales-home"
+                                    class="top-sales-list"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SALES DASHBOARD
+            ================================================== -->
+
+            <div
+                id="sales-personal-dashboard"
+                class="sales-dashboard-only hidden"
+            >
+
+                <div class="dashboard-bottom-grid">
+
+                    <div class="dashboard-card">
+
+                        <div class="card-heading">
+
+                            <div>
+
+                                <span class="section-label">
+                                    TREND
+                                </span>
+
+                                <h3>
+                                    Perkembangan Penjualan Saya
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="sales-chart">
+
+                            <canvas
+                                id="sales-progress-chart"
+                            ></canvas>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-card">
+
+                        <div class="card-heading">
+
+                            <h3>
+                                Ranking Sales
+                            </h3>
+
+                        </div>
+
+                        <div id="sales-ranking-summary"></div>
+
+                        <div id="sales-ranking-list"></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <div class="card-heading">
+
+                        <div>
+
+                            <span class="section-label">
+                                CATEGORY
+                            </span>
+
+                            <h3>
+                                Target & Actual Saya
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="sales-chart">
+
+                        <canvas
+                            id="sales-category-chart"
+                        ></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             INPUT PENJUALAN
+        ====================================================== -->
+
+        <section
+            id="view-input"
+            class="view"
+        >
+
+            <div class="dashboard-card">
+
+                <div class="card-heading">
+
+                    <h2>
+                        Input Penjualan
+                    </h2>
+
+                </div>
+
+
+                <form id="transaction-form">
+
+                    <div class="form-grid">
+
+                        <div>
+
+                            <label>
+                                Tanggal
+                            </label>
+
+                            <input
+                                id="transaction-date"
+                                type="date"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div id="admin-sales-field">
+
+                            <label>
+                                Sales
+                            </label>
+
+                            <select id="transaction-sales">
+
+                                <option value="">
+                                    Pilih Sales
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div
+                            id="sales-identity-field"
+                            class="hidden"
+                        >
+
+                            <label>
+                                Sales
+                            </label>
+
+                            <input
+                                id="transaction-sales-name"
+                                type="text"
+                                readonly
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Store
+                            </label>
+
+                            <select
+                                id="transaction-store"
+                                required
+                            >
+
+                                <option value="">
+                                    Pilih Store
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Channel
+                            </label>
+
+                            <select
+                                id="transaction-channel"
+                                disabled
+                            >
+
+                                <option value="">
+                                    Pilih Sales terlebih dahulu
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Produk
+                            </label>
+
+                            <select
+                                id="transaction-product"
+                                required
+                            >
+
+                                <option value="">
+                                    Pilih Produk
+                                </option>
+
+                                <option value="XL Prioritas">
+                                    XL Prioritas
+                                </option>
+
+                                <option value="XLHome">
+                                    XLHome
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Price Plan
+                            </label>
+
+                            <select
+                                id="transaction-plan"
+                                required
+                            >
+
+                                <option value="">
+                                    Pilih Price Plan
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Harga
+                            </label>
+
+                            <input
+                                id="transaction-price"
+                                type="number"
+                                min="0"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Quantity
+                            </label>
+
+                            <input
+                                id="transaction-quantity"
+                                type="number"
+                                min="1"
+                                value="1"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Tipe Transaksi
+                            </label>
+
+                            <select
+                                id="transaction-type"
+                                required
+                            >
+
+                                <option value="">
+                                    Pilih
+                                </option>
+
+                                <option value="New Activation">
+                                    New Activation
+                                </option>
+
+                                <option value="Migrasi to Post">
+                                    Migrasi to Post
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                MSISDN / Catatan
+                            </label>
+
+                            <input
+                                id="transaction-notes"
+                                type="text"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="transaction-total">
+
+                        Total:
+
+                        <strong id="transaction-total">
+                            Rp0
+                        </strong>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        Simpan Transaksi
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             RECAP
+        ====================================================== -->
+
+        <section
+            id="view-recap"
+            class="view"
+        >
+
+            <div class="dashboard-card">
+
+                <div class="card-heading">
+
+                    <h2>
+                        Recap Penjualan
+                    </h2>
+
+                </div>
+
+
+                <div class="filter-grid">
+
+                    <input
+                        id="filter-date-from"
+                        type="date"
+                    >
+
+                    <input
+                        id="filter-date-to"
+                        type="date"
+                    >
+
+                    <select id="filter-sales">
+
+                        <option value="">
+                            Semua Sales
+                        </option>
+
+                    </select>
+
+                    <select id="filter-store">
+
+                        <option value="">
+                            Semua Store
+                        </option>
+
+                    </select>
+
+                    <select id="filter-product">
+
+                        <option value="">
+                            Semua Produk
+                        </option>
+
+                        <option value="XL Prioritas">
+                            XL Prioritas
+                        </option>
+
+                        <option value="XLHome">
+                            XLHome
+                        </option>
+
+                    </select>
+
+                    <select id="filter-channel">
+
+                        <option value="">
+                            Semua Channel
+                        </option>
+
+                        <option value="Instore">
+                            Instore
+                        </option>
+
+                        <option value="Outstore">
+                            Outstore
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="recap-summary">
+
+                    <span>
+                        Jumlah:
+                        <strong id="recap-count">
+                            0
+                        </strong>
+                    </span>
+
+                    <span>
+                        Revenue:
+                        <strong id="recap-revenue">
+                            Rp0
+                        </strong>
+                    </span>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Tanggal</th>
+                                <th>Sales</th>
+                                <th>Store</th>
+                                <th>Produk</th>
+                                <th>Channel</th>
+                                <th>Price Plan</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="recap-body"></tbody>
+
+                    </table>
+
+                </div>
+
+
+                <p
+                    id="recap-empty"
+                    class="empty-message"
+                >
+                    Belum ada transaksi.
+                </p>
+
+            </div>
+
+        </section>
+
+
+<section
+    id="view-target"
+    class="view"
+>
+
+    <div class="section-header">
+
+        <div>
+
+            <p class="section-eyebrow">
+                SALES TARGET
+            </p>
+
+            <h2>
+                Target & Achievement
+            </h2>
+
+            <p>
+                Atur target penjualan harian per kategori.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- DAILY TARGET FORM -->
+    <!-- ================================================= -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <h3>
+                    Target Penjualan Harian
+                </h3>
+
+                <p>
+                    Target berlaku mulai tanggal yang dipilih
+                    sampai terdapat target baru.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form
+            id="daily-target-form"
+            class="form-grid"
+        >
+
+            <div class="form-group">
+
+                <label
+                    for="daily-target-date"
+                >
+                    Tanggal
+                </label>
+
+                <input
+                    id="daily-target-date"
+                    type="date"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label
+                    for="daily-target-product"
+                >
+                    Kategori
+                </label>
+
+                <select
+                    id="daily-target-product"
+                    required
+                >
+
+                    <option value="">
+                        Pilih Kategori
+                    </option>
+
+                    <option value="XL Prioritas">
+                        XL Prioritas
+                    </option>
+
+                    <option value="XLHome">
+                        XLHome
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label
+                    for="daily-target-value"
+                >
+                    Target Harian
+                </label>
+
+                <input
+                    id="daily-target-value"
+                    type="number"
+                    min="0"
+                    step="1"
+                    placeholder="Contoh: 200"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group form-action-group">
+
+                <label>
+                    &nbsp;
+                </label>
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    Simpan Target
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- TARGET ACTIVE -->
+    <!-- ================================================= -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <h3>
+                    Target Aktif
+                </h3>
+
+                <p>
+                    Target yang digunakan Dashboard saat ini.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="target-summary-grid">
+
+            <article class="target-summary-card">
+
+                <span>
+                    XL Prioritas
+                </span>
+
+                <strong
+                    id="active-target-prioritas"
+                >
+                    0
+                </strong>
+
+                <small>
+                    unit / hari
+                </small>
+
+            </article>
+
+
+            <article class="target-summary-card">
+
+                <span>
+                    XLHome
+                </span>
+
+                <strong
+                    id="active-target-home"
+                >
+                    0
+                </strong>
+
+                <small>
+                    unit / hari
+                </small>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- TARGET HISTORY -->
+    <!-- ================================================= -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <h3>
+                    Riwayat Target
+                </h3>
+
+                <p>
+                    Perubahan target harian berdasarkan tanggal.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="daily-target-history"
+            class="list-container"
+        ></div>
+
+    </section>
+
+</section>
+
+
+        <!-- =====================================================
+             VISITOR
+        ====================================================== -->
+
+        <section
+            id="view-visitor"
+            class="view admin-only"
+        >
+
+            <div class="dashboard-card">
+
+                <div class="card-heading">
+
+                    <h2>
+                        Input Visitor
+                    </h2>
+
+                </div>
+
+
+                <form id="visitor-form">
+
+                    <div class="form-grid">
+
+                        <div>
+
+                            <label>
+                                Tanggal
+                            </label>
+
+                            <input
+                                id="visitor-date"
+                                type="date"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Store
+                            </label>
+
+                            <select
+                                id="visitor-store"
+                                required
+                            ></select>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Jumlah Visitor
+                            </label>
+
+                            <input
+                                id="visitor-count"
+                                type="number"
+                                min="0"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        Simpan Visitor
+                    </button>
+
+                </form>
+
+
+                <div
+                    id="visitor-history"
+                    class="list-stack"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             MASTER DATA
+        ====================================================== -->
+
+        <section
+            id="view-master"
+            class="view admin-only"
+        >
+
+            <div class="dashboard-heading">
+
+                <div>
+
+                    <span>
+                        ADMINISTRATION
+                    </span>
+
+                    <h2>
+                        Master Data
+                    </h2>
+
+                    <p>
+                        Kelola Store, Sales dan Price Plan.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="master-grid">
+
+                <!-- STORE -->
+
+                <div class="master-card">
+
+                    <h3>
+                        Data Store
+                    </h3>
+
+
+                    <form id="store-form">
+
+                        <input
+                            id="store-id"
+                            type="hidden"
+                        >
+
+                        <label>
+                            Nama Store
+                        </label>
+
+                        <input
+                            id="store-name"
+                            type="text"
+                            required
+                        >
+
+                        <button
+                            id="store-submit-button"
+                            type="submit"
+                            class="master-submit store"
+                        >
+                            Tambah Store
+                        </button>
+
+                        <button
+                            id="store-cancel-edit"
+                            type="button"
+                            class="cancel-edit hidden"
+                        >
+                            Batal Edit
+                        </button>
+
+                    </form>
+
+
+                    <div class="master-tools">
+
+                        <button
+                            id="store-download"
+                            type="button"
+                        >
+                            Download CSV
+                        </button>
+
+                        <label>
+
+                            Upload CSV
+
+                            <input
+                                id="store-upload"
+                                type="file"
+                                accept=".csv"
+                                hidden
+                            >
+
+                        </label>
+
+                    </div>
+
+
+                    <div
+                        id="store-list"
+                        class="master-list"
+                    ></div>
+
+                </div>
+
+
+                <!-- SALES -->
+
+                <div class="master-card">
+
+                    <h3>
+                        Data Sales
+                    </h3>
+
+
+                    <form id="sales-form">
+
+                        <input
+                            id="sales-id"
+                            type="hidden"
+                        >
+
+                        <label>
+                            Nama Sales
+                        </label>
+
+                        <input
+                            id="sales-name"
+                            type="text"
+                            required
+                        >
+
+
+                        <label>
+                            Kategori
+                        </label>
+
+                        <select
+                            id="sales-type"
+                            required
+                        >
+
+                            <option value="">
+                                Pilih kategori
+                            </option>
+
+                            <option value="Walk-in">
+                                Walk-in
+                            </option>
+
+                            <option value="Walk-out">
+                                Walk-out
+                            </option>
+
+                        </select>
+
+
+                        <label>
+                            Store
+                        </label>
+
+                        <select
+                            id="sales-store"
+                            required
+                        ></select>
+
+
+                        <button
+                            id="sales-submit-button"
+                            type="submit"
+                            class="master-submit sales"
+                        >
+                            Tambah Sales
+                        </button>
+
+                        <button
+                            id="sales-cancel-edit"
+                            type="button"
+                            class="cancel-edit hidden"
+                        >
+                            Batal Edit
+                        </button>
+
+                    </form>
+
+
+                    <div class="master-tools">
+
+                        <button
+                            id="sales-download"
+                            type="button"
+                        >
+                            Download CSV
+                        </button>
+
+                        <label>
+
+                            Upload CSV
+
+                            <input
+                                id="sales-upload"
+                                type="file"
+                                accept=".csv"
+                                hidden
+                            >
+
+                        </label>
+
+                    </div>
+
+
+                    <div
+                        id="sales-list"
+                        class="master-list"
+                    ></div>
+
+                </div>
+
+
+                <!-- PRICE PLAN -->
+
+                <div class="master-card">
+
+                    <h3>
+                        Price Plan
+                    </h3>
+
+
+                    <form id="plan-form">
+
+                        <input
+                            id="plan-id"
+                            type="hidden"
+                        >
+
+
+                        <label>
+                            Produk
+                        </label>
+
+                        <select
+                            id="plan-product"
+                            required
+                        >
+
+                            <option value="">
+                                Pilih produk
+                            </option>
+
+                            <option value="XL Prioritas">
+                                XL Prioritas
+                            </option>
+
+                            <option value="XLHome">
+                                XLHome
+                            </option>
+
+                        </select>
+
+
+                        <label>
+                            Nama Price Plan
+                        </label>
+
+                        <input
+                            id="plan-name"
+                            type="text"
+                            required
+                        >
+
+
+                        <label>
+                            Harga
+                        </label>
+
+                        <input
+                            id="plan-price"
+                            type="number"
+                            min="0"
+                            required
+                        >
+
+
+                        <button
+                            id="plan-submit-button"
+                            type="submit"
+                            class="master-submit plan"
+                        >
+                            Tambah Price Plan
+                        </button>
+
+                        <button
+                            id="plan-cancel-edit"
+                            type="button"
+                            class="cancel-edit hidden"
+                        >
+                            Batal Edit
+                        </button>
+
+                    </form>
+
+
+                    <div class="master-tools">
+
+                        <button
+                            id="plan-download"
+                            type="button"
+                        >
+                            Download CSV
+                        </button>
+
+                        <label>
+
+                            Upload CSV
+
+                            <input
+                                id="plan-upload"
+                                type="file"
+                                accept=".csv"
+                                hidden
+                            >
+
+                        </label>
+
+                    </div>
+
+
+                    <div
+                        id="plan-list"
+                        class="master-list"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="danger-zone">
+
+                <div>
+
+                    <strong>
+                        Bersihkan Data
+                    </strong>
+
+                    <p>
+                        Tindakan ini tidak dapat dibatalkan.
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <button
+                        id="delete-all-stores"
+                        type="button"
+                    >
+                        Hapus Store
+                    </button>
+
+                    <button
+                        id="delete-all-sales"
+                        type="button"
+                    >
+                        Hapus Sales
+                    </button>
+
+                    <button
+                        id="delete-all-plans"
+                        type="button"
+                    >
+                        Hapus Price Plan
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</section>
+
+
+<div id="toast"></div>
+
+
+</body>
+</html>
